@@ -84,7 +84,7 @@ namespace Log
 		ofstream fout(parm.out);
 		if (fout.is_open() == false)
 			return;
-		fout << in.text << endl;
+		fout << in.ucTextFormated << endl;
 		fout.close();
 	}
 	void Close(LOG log)

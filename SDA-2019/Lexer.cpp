@@ -387,7 +387,6 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		IT::Entry newEntry = createStructId((char*)text, (tableOfLexem->size), typeData, typeID, NULL, &stackCall.top());
 		if ((*typeID == 2)) stackCall.push(newEntry);
 		IT::Add(newIdTable, newEntry);
-		cout << "view:" << newIdTable->table[newIdTable->size-1].view->view<<endl;
 		bool idInTable = false;	
 	
 		for (int i = 0; i < newIdTable->maxsize; i++)

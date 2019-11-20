@@ -20,6 +20,7 @@ namespace In
 			sText += '\n';
 			newIn.lines++;
 		}
+
 		int TMP = newIn.lines;
 		while (TMP > 0) {
 			TMP = TMP / 10;
@@ -76,7 +77,9 @@ namespace In
 		}
 		*pPtrText = '\0';
 		newIn.size = strlen((char*)newIn.text);
-
+		short separator = 0;
+		
+		int position = 0;
 
 		unsigned char* ucTextFormated = new unsigned char[(newIn.size * 2) + 1];
 		pPtrText = ucTextFormated;
@@ -90,6 +93,7 @@ namespace In
 				{
 					if (!bScope) bScope = true;
 					else bScope = false;
+					if (bScope == false) position = i;
 				}
 
 				if (((*(newIn.text + i) == ';' || *(newIn.text + i) == ',') || (*(newIn.text + i) == '+') ||
@@ -98,6 +102,15 @@ namespace In
 					(*(newIn.text + i) == '}') || (*(newIn.text + i) == '\n') || (*(newIn.text + i) == '/')||
 					(*(newIn.text + i) == ':')|| (*(newIn.text + i) == '[')|| (*(newIn.text + i) == ']')) && (!bScope))
 				{
+					if ((*(newIn.text + i) == '/') && (*(newIn.text + i + 1) == '/')) {
+						while (*(newIn.text + i) != '\n') {
+							i++;
+							*pPtrText = *(newIn.text + i);
+							continue;
+							
+						}
+					}
+
 					if (*(newIn.text + i) == '\n')
 					{
 						*pPtrText = ' ';
