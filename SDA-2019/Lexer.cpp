@@ -8,6 +8,7 @@
 using namespace fst;
 using namespace std;
 using namespace LT;
+int counterLiteral = 0;
 int counterTokenInProgram = 0;
 int haveMain = 0;
 bool haveIF = false;
@@ -370,9 +371,10 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		int*t2 = new int;
 		*t = 1;
 		*t2 = 4;
-		char numberLi[20];
-		_itoa_s(counterTokenInProgram, numberLi, 10);
-		IT::Entry newEntry = createStructId(numberLi, numberOfstring, t, t2, (char*)text);
+		string numberLi = "lI";
+		string num = to_string(counterLiteral++);
+		/*_itoa_s(counterTokenInProgram, numberLi, 10);*/
+		IT::Entry newEntry = createStructId(stringToChar(numberLi+num), numberOfstring, t, t2, (char*)text);
 		IT::Add(newIdTable, newEntry);
 		for (int i = 0; i < newIdTable->size; i++)
 		{
@@ -388,9 +390,11 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		int*t2 = new int;
 		*t = 2;
 		*t2 = 4;
-		char numberLi[20];
-		_itoa_s(counterTokenInProgram, numberLi, 10);
-		IT::Entry newEntry = createStructId(numberLi, numberOfstring, t, t2, (char*)text);
+		string numberLi="lS";
+		string num = to_string(counterLiteral++);
+		
+		/*_itoa_s(counterTokenInProgram, numberLi, 10);*/
+		IT::Entry newEntry = createStructId(stringToChar(numberLi+num), numberOfstring, t, t2, (char*)text);
 		IT::Add(newIdTable, newEntry);
 		for (int i = 0; i < newIdTable->size; i++)
 		{
