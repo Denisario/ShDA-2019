@@ -402,10 +402,15 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		return;
 	}
 	if (execute(fstId)) {
+		IT::Entry* view = new IT::Entry;
+		*view = stackCall.top();
 
-		IT::Entry newEntry = createStructId((char*)text, (tableOfLexem->size), typeData, typeID, NULL, &stackCall.top());
-		if ((*typeID == 2)) stackCall.push(newEntry);
+		IT::Entry newEntry = createStructId((char*)text, numberOfstring, typeData, typeID, NULL, view);
+		if ((*typeID == 2)) {
+			stackCall.push(newEntry);			
+		}
 		IT::Add(newIdTable, newEntry);
+		
 		bool idInTable = false;	
 	
 		for (int i = 0; i < newIdTable->maxsize; i++)
