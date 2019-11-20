@@ -10,6 +10,7 @@ using namespace std;
 using namespace LT;
 int counterTokenInProgram = 0;
 int haveMain = 0;
+bool haveIF = false;
 stack <IT::Entry> stackCall;
 char* stringToChar(string str) {
 	char* massChar = new char[255];
@@ -217,7 +218,14 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 	);
 	FST fstEqual(text, 2,
 		NODE(1, RELATION('=', 1)),
-		NODE());
+		NODE()
+	);
+
+	FST fstFullEqual(text, 3,
+		NODE(1, RELATION('=', 1)),	
+		NODE(1, RELATION('=', 2)),
+		NODE()
+	);
 
 	FST fstLiteralOfString(text, 3,
 		NODE(1, RELATION('\'', 1)),
@@ -313,7 +321,11 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		return;
 	}
 	if (execute(fstEqual)) {
-		Add(tableOfLexem, createStructLexem(LEX_EQUAL, numberOfstring, LT_TI_NULLIDX));
+		Add(tableOfLexem, createStructLexem(LEX_EQUAL, numberOfstring, LT_TI_NULLIDX));		
+		return;
+	}
+	if (execute(fstFullEqual)) {
+		Add(tableOfLexem, createStructLexem(LEX_FULLEQUAL, numberOfstring, LT_TI_NULLIDX, '='));
 		return;
 	}
 	if (execute(fstDirslash)) {
@@ -330,10 +342,12 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 	}
 	if (execute(fstIf)) {
 		Add(tableOfLexem, createStructLexem(LEX_IF, numberOfstring, LT_TI_NULLIDX));
+		haveIF = true;
 		return;
 	}
 	if (execute(fstElif)) {
 		Add(tableOfLexem, createStructLexem(LEX_ELIF, numberOfstring, LT_TI_NULLIDX));
+		haveIF = false;
 		return;
 	}
 	if (execute(fstElse)) {
@@ -343,6 +357,11 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 
 	if (execute(fstRem)) {
 		Add(tableOfLexem, createStructLexem(LEX_REM, numberOfstring, LT_TI_NULLIDX, ':', 2));
+		return;
+	}
+
+	if (execute(fstFullEqual)) {
+		Add(tableOfLexem, createStructLexem(LEX_FULLEQUAL, numberOfstring, LT_TI_NULLIDX, '==', -1));
 		return;
 	}
 
@@ -406,12 +425,14 @@ Tables createTables(In::IN newIN)
 {
 	char global[6] = "globa";
 	stackCall.push(createStructId(global, -1, NULL, NULL, NULL, NULL));
-	cout << newIN.ucTextFormated;//удалить
+	//cout << newIN.ucTextFormated;//удалить
+
 	int* typeData = new int;
 	int* typeID = new int;
 	*typeData = -1;
 	*typeID = -1;
 	unsigned char* input = newIN.ucTextFormated;
+
 	string currentString;
 	int indOfFirstSpace = 0;
 	bool isFirstSpaceDetected = false;

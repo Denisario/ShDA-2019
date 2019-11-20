@@ -24,6 +24,7 @@
 #define LEX_DIRSLASH '/'
 #define LEX_REM ':'
 #define LEX_EQUAL '='
+#define LEX_FULLEQUAL '='
 #define LEX_MAIN 'M'
 #define LEX_IF 'f'
 #define LEX_ELIF 'e'
