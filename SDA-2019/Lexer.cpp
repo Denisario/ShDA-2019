@@ -409,7 +409,7 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		IT::Entry* view = new IT::Entry;
 		*view = stackCall.top();
 
-		IT::Entry newEntry = createStructId((char*)text, numberOfstring, typeData, typeID, NULL, view);
+		IT::Entry newEntry = createStructId((char*)text, tableOfLexem->size, typeData, typeID, NULL, view);
 		if ((*typeID == 2)) {
 			stackCall.push(newEntry);			
 		}
