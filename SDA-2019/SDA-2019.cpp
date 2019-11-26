@@ -19,6 +19,7 @@ int _tmain(int argc, _TCHAR **argv)
 		Log::WriteLog(log);
 		Log::WriteParm(log, parm);
 		Log::WriteIn(log, in);	
+		cout << in.ucTextFormated;
 		Tables tables = createTables(in);
 		Print(tables);
 		Log::writeOut(parm, in);

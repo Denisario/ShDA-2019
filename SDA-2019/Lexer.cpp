@@ -5,6 +5,7 @@
 #include "In.h"
 #include "Lexer.h"
 #include "Error.h"
+#include <string>
 using namespace fst;
 using namespace std;
 using namespace LT;
@@ -31,10 +32,10 @@ Entry createStructLexem(char type, int number, int numberInTableId, char vType =
 	return newLexem;
 
 }
-IT::Entry createStructId(char* id, int line, int*typeData, int*typeID, char lexema[TI_STR_MAXSIZE] = NULL, IT::Entry* view = NULL) {
-	IT::Entry newItEntry;	
+IT::Entry createStructId(char* id, int line, int*typeData, int*typeID, int*littype, char lexema[TI_STR_MAXSIZE] = NULL, IT::Entry* view = NULL) {
+	IT::Entry newItEntry;
 	int counterSymbol = 0;
-	for (int i = 0; (i < strlen(id)) && (i < ID_MAXSIZE - 1); i++)
+	for (int i = 0; i < strlen(id); i++)
 	{
 		newItEntry.id[i] = id[i];
 		counterSymbol++;
@@ -42,6 +43,7 @@ IT::Entry createStructId(char* id, int line, int*typeData, int*typeID, char lexe
 	newItEntry.id[counterSymbol] = '\0';
 	if (typeData) newItEntry.iddatatype = (IT::IDDATATYPE)*typeData;
 	if (typeID) newItEntry.idtype = (IT::IDTYPE)*typeID;
+	if (littype) newItEntry.littype = (IT::LITERALTYPE)*littype;
 	newItEntry.idxfirstLE = line;
 	newItEntry.view = view;
 	if ((int)newItEntry.idtype != 4) {
@@ -58,9 +60,15 @@ IT::Entry createStructId(char* id, int line, int*typeData, int*typeID, char lexe
 	}
 	else
 	{
-		if ((int)newItEntry.iddatatype == 1)
+		if (((int)newItEntry.iddatatype == 1)&&((int)newItEntry.littype==2))
 		{
 			newItEntry.value.vint = atoi(lexema);
+		}
+		else if ((int)newItEntry.littype == 3) {
+			string sVal=lexema;
+			string result = sVal.substr(1,strlen(lexema) - 1);
+			
+			newItEntry.value.vint = atoi(stringToChar(result));
 		}
 		else
 		{
@@ -71,8 +79,9 @@ IT::Entry createStructId(char* id, int line, int*typeData, int*typeID, char lexe
 	return newItEntry;
 }
 
-void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int numberOfstring, int poz, IT::IdTable* newIdTable, int*typeData, int*typeID)
+void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int numberOfstring, int poz, IT::IdTable* newIdTable, int*typeData, int*typeID, int*littype)
 {
+	
 	FST fstInt(text, 4,
 		NODE(1, RELATION('i', 1)),
 		NODE(1, RELATION('n', 2)),
@@ -196,6 +205,12 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		NODE()
 	);
 
+	FST fstOctalLiteral(text, 3,
+		NODE(1, RELATION('o',1)),
+		NODE(16, RELATION('0', 1), RELATION('1', 1), RELATION('2', 1), RELATION('3', 1), RELATION('4', 1), RELATION('5', 1), RELATION('6', 0),RELATION('7', 1),
+				 RELATION('0', 2), RELATION('1', 2), RELATION('2', 2), RELATION('3', 2), RELATION('4', 2), RELATION('5', 2), RELATION('6', 2), RELATION('7', 2)),
+			NODE()
+	);
 
 	FST fstLiteralOfInteger(text, 2,
 		NODE(20, RELATION('0', 0), RELATION('1', 0), RELATION('2', 0), RELATION('3', 0), RELATION('4', 0), RELATION('5', 0), RELATION('6', 0),
@@ -279,7 +294,7 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		Add(tableOfLexem, createStructLexem(LEX_MAIN, numberOfstring, LT_TI_NULLIDX));
 		haveMain = true;
 		char  gl[6] = "Main";
-		stackCall.push(createStructId(gl, -1, NULL, NULL, gl, NULL));
+		stackCall.push(createStructId(gl, -1, NULL, NULL,NULL, gl, NULL));
 		return;
 	}
 	if (execute(fstSemicolon)) {
@@ -369,12 +384,39 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 	if (execute(fstLiteralOfInteger)) {
 		int*t = new int;
 		int*t2 = new int;
+		int*t3 = new int;
 		*t = 1;
 		*t2 = 4;
+		*t3 = 2;
 		string numberLi = "lI";
 		string num = to_string(counterLiteral++);
 		/*_itoa_s(counterTokenInProgram, numberLi, 10);*/
-		IT::Entry newEntry = createStructId(stringToChar(numberLi+num), numberOfstring, t, t2, (char*)text);
+		IT::Entry newEntry = createStructId(stringToChar(numberLi+num), numberOfstring, t, t2,t3, (char*)text);
+		
+		IT::Add(newIdTable, newEntry);
+		for (int i = 0; i < newIdTable->size; i++)
+		{
+			if (!strcmp(newEntry.id, newIdTable->table[i].id)) 	Add(tableOfLexem, createStructLexem(LEX_LITERAL, numberOfstring, i));
+		}
+		counterTokenInProgram++;
+		delete t;
+		delete t2;
+		delete t3;
+		return;
+	}
+	if (execute(fstOctalLiteral)) {
+		int*t = new int;
+		int*t2 = new int;		
+		int*t3 = new int;		
+		*t = 1;
+		*t2 = 4;		
+		*t3 = 3;		
+		string numberLi = "lo";
+		string num = to_string(counterLiteral++);
+		/*_itoa_s(counterTokenInProgram, numberLi, 10);*/
+		IT::Entry newEntry;
+		newEntry= createStructId(stringToChar(numberLi + num), numberOfstring, t, t2,t3, (char*)text);
+		newEntry.littype = (IT::LITERALTYPE)3;
 		IT::Add(newIdTable, newEntry);
 		for (int i = 0; i < newIdTable->size; i++)
 		{
@@ -388,13 +430,16 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 	if (execute(fstLiteralOfString)) {
 		int*t = new int;
 		int*t2 = new int;
+		int*t3 = new int;
 		*t = 2;
 		*t2 = 4;
+		*t3 = 1;
 		string numberLi="lS";
 		string num = to_string(counterLiteral++);
 		
 		/*_itoa_s(counterTokenInProgram, numberLi, 10);*/
-		IT::Entry newEntry = createStructId(stringToChar(numberLi+num), numberOfstring, t, t2, (char*)text);
+		IT::Entry newEntry = createStructId(stringToChar(numberLi+num), numberOfstring, t, t2, t3,(char*)text);
+		newEntry.littype = (IT::LITERALTYPE)1;
 		IT::Add(newIdTable, newEntry);
 		for (int i = 0; i < newIdTable->size; i++)
 		{
@@ -403,13 +448,14 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		counterTokenInProgram++;
 		delete t;
 		delete t2;
+		delete t3;
 		return;
 	}
 	if (execute(fstId)) {
 		IT::Entry* view = new IT::Entry;
 		*view = stackCall.top();
 
-		IT::Entry newEntry = createStructId((char*)text, tableOfLexem->size, typeData, typeID, NULL, view);
+		IT::Entry newEntry = createStructId((char*)text, tableOfLexem->size, typeData, typeID, littype, NULL, view);
 		if ((*typeID == 2)) {
 			stackCall.push(newEntry);			
 		}
@@ -433,11 +479,13 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 Tables createTables(In::IN newIN)
 {
 	char global[6] = "globa";
-	stackCall.push(createStructId(global, -1, NULL, NULL, NULL, NULL));
+	stackCall.push(createStructId(global, -1, NULL, NULL,NULL, NULL));
 	//cout << newIN.ucTextFormated;//удалить
 
 	int* typeData = new int;
 	int* typeID = new int;
+	int* littype = new int;
+	*littype = -1;
 	*typeData = -1;
 	*typeID = -1;
 	unsigned char* input = newIN.ucTextFormated;
@@ -477,7 +525,7 @@ Tables createTables(In::IN newIN)
 				else {
 					if (scope) currentLexem = currentLexem + currentString[j];
 					else {
-						initTypeLexem(stringToChar(currentLexem), currentString, newTable, numberOfString, (j - indOfFirstSpace - currentLexem.length()), newIdTable, typeData, typeID);
+						initTypeLexem(stringToChar(currentLexem), currentString, newTable, numberOfString, (j - indOfFirstSpace - currentLexem.length()), newIdTable, typeData, typeID, littype);
 						counterLexem++;
 						currentLexem.clear();
 					}
@@ -577,7 +625,7 @@ void Print(Tables tables)
 		else it << setw(11) << tables.IDTABLE->table[i].value.vstr->str;
 		if (tables.IDTABLE->table[i].view)it << ". Область видимости: " << setw(6) << tables.IDTABLE->table[i].view->id;
 		else it << "                           ";
-		it << ". Номер первого вхождения: " << setw(2) << tables.IDTABLE->table[i].idxfirstLE << endl;
+		it << ". Номер первого вхождения: " << setw(2) << tables.IDTABLE->table[i].idxfirstLE <<"  . Тип литерала: "<<tables.IDTABLE->table[i].littype<< endl;
 	}
 	
 }

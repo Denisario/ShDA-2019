@@ -21,12 +21,18 @@ namespace IT
 		P = 3,                        //параметр
 		L = 4                         //литерал
 	};
+	enum LITERALTYPE {
+		S=1,
+		D=2,
+		O=3
+	};
 	struct Entry
 	{
 		int idxfirstLE;               //индекс первой строки в ТЛ
 		char id[ID_MAXSIZE];          //идентификатор
 		IDDATATYPE iddatatype;        //тип данных
 		IDTYPE idtype;                //тип идентификатора
+		LITERALTYPE littype;
 		Entry* view = NULL;
 		union
 		{
