@@ -31,6 +31,11 @@
 #define LEX_ELSE 's'
 #define LEX_STARTBLOCK '['
 #define LEX_ENDBLOCK ']'
+#define LEX_GREATER '>'
+#define LEX_LESS '<'
+#define LEX_AND '&'
+#define LEX_OR '|'
+#define LEX_NOT '!'
 
 #pragma once
 namespace LT {

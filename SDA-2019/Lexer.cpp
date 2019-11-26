@@ -243,6 +243,49 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		NODE()
 	);
 
+	FST fstGreater(text, 2,
+		NODE(1, RELATION('>', 1)),
+		NODE()
+	);
+	FST fstLesser(text, 2,
+		NODE(1, RELATION('<', 1)),
+		NODE()
+	);
+	FST fstGreaterOrEqual(text, 3,
+		NODE(1, RELATION('>', 1)),
+		NODE(1, RELATION('=', 2)),
+		NODE()
+	);
+	FST fstLesserOrEqual(text, 3,
+		NODE(1, RELATION('<', 1)),
+		NODE(1, RELATION('=', 2)),
+		NODE()
+	);
+
+	FST fstAnd(text, 3,
+		NODE(1, RELATION('&', 1)),
+		NODE(1, RELATION('&', 2)),
+		NODE()
+	);
+
+	FST fstOr(text, 3,
+		NODE(1, RELATION('|', 1)),
+		NODE(1, RELATION('|', 2)),
+		NODE()
+	);
+	FST fstNotEqual(text, 3,
+		NODE(1, RELATION('!', 1)),
+		NODE(1, RELATION('=', 2)),
+		NODE()
+	);
+	FST fstNot(text, 2,
+		NODE(1, RELATION('!', 1)),
+		NODE()
+	);
+
+
+
+
 	FST fstLiteralOfString(text, 3,
 		NODE(1, RELATION('\'', 1)),
 		NODE(71,
@@ -344,6 +387,22 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		Add(tableOfLexem, createStructLexem(LEX_FULLEQUAL, numberOfstring, LT_TI_NULLIDX, '='));
 		return;
 	}
+	if (execute(fstGreater)) {
+		Add(tableOfLexem, createStructLexem(LEX_GREATER, numberOfstring, LT_TI_NULLIDX, '>', 2));
+		return;
+	}
+	if (execute(fstLesser)) {
+		Add(tableOfLexem, createStructLexem(LEX_LESS, numberOfstring, LT_TI_NULLIDX, '<', 2));
+		return;
+	}
+	if (execute(fstGreaterOrEqual)) {
+		Add(tableOfLexem, createStructLexem(LEX_GREATER, numberOfstring, LT_TI_NULLIDX, '>', 2));
+		return;
+	}
+	if (execute(fstLesserOrEqual)) {
+		Add(tableOfLexem, createStructLexem(LEX_LESS, numberOfstring, LT_TI_NULLIDX, '<', 2));
+		return;
+	}
 	if (execute(fstDirslash)) {
 		Add(tableOfLexem, createStructLexem(LEX_DIRSLASH, numberOfstring, LT_TI_NULLIDX, '/', 3));
 		return;
@@ -378,6 +437,27 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 
 	if (execute(fstFullEqual)) {
 		Add(tableOfLexem, createStructLexem(LEX_FULLEQUAL, numberOfstring, LT_TI_NULLIDX, '==', -1));
+		return;
+	}
+
+	if (execute(fstFullEqual)) {
+		Add(tableOfLexem, createStructLexem(LEX_FULLEQUAL, numberOfstring, LT_TI_NULLIDX, '==', -1));
+		return;
+	}
+	if (execute(fstAnd)) {
+		Add(tableOfLexem, createStructLexem(LEX_AND, numberOfstring, LT_TI_NULLIDX, '&', 2));
+		return;
+	}
+	if (execute(fstOr)) {
+		Add(tableOfLexem, createStructLexem(LEX_OR, numberOfstring, LT_TI_NULLIDX, '|', 2));
+		return;
+	}
+	if (execute(fstNotEqual)) {
+		Add(tableOfLexem, createStructLexem(LEX_NOT, numberOfstring, LT_TI_NULLIDX, '!', 2));
+		return;
+	}
+	if (execute(fstNot)) {
+		Add(tableOfLexem, createStructLexem(LEX_NOT, numberOfstring, LT_TI_NULLIDX, '!', 2));
 		return;
 	}
 
