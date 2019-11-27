@@ -14,7 +14,7 @@ IdTable* IT::Create(int size) {
 
 void IT::Add(IdTable * idtable, Entry newEntry)
 {
-	if (idtable->size > idtable->maxsize) throw ERROR_THROW(3)
+	if (idtable->size > idtable->maxsize) throw ERROR_THROW(200);
 		idtable->table[idtable->size] = newEntry;
 	idtable->size++;
 }

@@ -508,6 +508,9 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		return;
 	}
 	if (execute(fstLiteralOfString)) {
+		int size = strlen(text);
+		if (size > 257) throw ERROR_THROW(201);
+		if (text[size-1] != '\'') throw ERROR_THROW(202);
 		int*t = new int;
 		int*t2 = new int;
 		int*t3 = new int;
@@ -552,7 +555,7 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		return;
 	}
 	cout << text;
-	throw ERROR_THROW_IN(9, numberOfstring, poz);
+	throw ERROR_THROW_IN(198, numberOfstring, poz);
 
 }
 
