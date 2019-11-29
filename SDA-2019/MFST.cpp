@@ -53,8 +53,8 @@ namespace MFST
 	{
 		grebach = pgrebach;
 		lex = plex;
-		lenta = new short[lenta_size = lex.LEXTABLE.size];		// массив для ленты, состоящией из символов таблицы лексем
-		for (int k = 0; k < lenta_size; k++) lenta[k] = TS(lex.LEXTABLE.table[k].lexema);	// заполнение массива терминалами
+		lenta = new short[lenta_size = lex.LEXTABLE->size];		// массив для ленты, состоящией из символов таблицы лексем
+		for (int k = 0; k < lenta_size; k++) lenta[k] = TS(lex.LEXTABLE->table[k].lexema);	// заполнение массива терминалами
 		lenta_position = 0;
 		st.push(grebach.stbottomT);		// дно стека в стек
 		st.push(grebach.startN);		// стартовый символ в стек
@@ -208,8 +208,8 @@ namespace MFST
 		if (n < MFST_DIAGN_NUMBER && (lpos = diagnosis[n].lenta_position) >= 0)
 		{
 			errid = grebach.getRule(diagnosis[n].nrule).iderror;
-			Error::ERROR err = Error::geterror(errid);
-			sprintf_s(buf, MFST_DIAGN_MAXSIZE, "%d: строка %d, %s", err.id, lex.LEXTABLE.table[lpos].sn, err.message);
+			Error::ERROR err = Error::getError(errid);
+			sprintf_s(buf, MFST_DIAGN_MAXSIZE, "%d: строка %d, %s", err.id, lex.LEXTABLE->table[lpos].sn, err.message);
 			rc = buf;
 		};
 		return rc;
