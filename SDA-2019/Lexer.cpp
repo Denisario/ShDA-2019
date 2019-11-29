@@ -206,8 +206,8 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 	);
 
 	FST fstOctalLiteral(text, 3,
-		NODE(1, RELATION('o',1)),
-		NODE(16, RELATION('0', 1), RELATION('1', 1), RELATION('2', 1), RELATION('3', 1), RELATION('4', 1), RELATION('5', 1), RELATION('6', 0),RELATION('7', 1),
+		NODE(1, RELATION('0',1)),
+		NODE(16, RELATION('0', 1), RELATION('1', 1), RELATION('2', 1), RELATION('3', 1), RELATION('4', 1), RELATION('5', 1), RELATION('6', 1),RELATION('7', 1),
 				 RELATION('0', 2), RELATION('1', 2), RELATION('2', 2), RELATION('3', 2), RELATION('4', 2), RELATION('5', 2), RELATION('6', 2), RELATION('7', 2)),
 			NODE()
 	);
@@ -266,6 +266,7 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		NODE(1, RELATION('&', 1)),
 		NODE(1, RELATION('&', 2)),
 		NODE()
+		
 	);
 
 	FST fstOr(text, 3,
@@ -380,7 +381,7 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		return;
 	}
 	if (execute(fstEqual)) {
-		Add(tableOfLexem, createStructLexem(LEX_EQUAL, numberOfstring, LT_TI_NULLIDX));		
+		Add(tableOfLexem, createStructLexem(LEX_EQUAL, numberOfstring, LT_TI_NULLIDX, '='));		
 		return;
 	}
 	if (execute(fstFullEqual)) {
@@ -431,7 +432,7 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 	}
 
 	if (execute(fstRem)) {
-		Add(tableOfLexem, createStructLexem(LEX_REM, numberOfstring, LT_TI_NULLIDX, ':', 2));
+		Add(tableOfLexem, createStructLexem(LEX_REM, numberOfstring, LT_TI_NULLIDX, ':', 3));
 		return;
 	}
 
@@ -445,19 +446,19 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		return;
 	}
 	if (execute(fstAnd)) {
-		Add(tableOfLexem, createStructLexem(LEX_AND, numberOfstring, LT_TI_NULLIDX, '&', 2));
+		Add(tableOfLexem, createStructLexem(LEX_AND, numberOfstring, LT_TI_NULLIDX, '&', 4));
 		return;
 	}
 	if (execute(fstOr)) {
-		Add(tableOfLexem, createStructLexem(LEX_OR, numberOfstring, LT_TI_NULLIDX, '|', 2));
+		Add(tableOfLexem, createStructLexem(LEX_OR, numberOfstring, LT_TI_NULLIDX, '|', 4));
 		return;
 	}
 	if (execute(fstNotEqual)) {
-		Add(tableOfLexem, createStructLexem(LEX_NOT, numberOfstring, LT_TI_NULLIDX, '!', 2));
+		Add(tableOfLexem, createStructLexem(LEX_NOT, numberOfstring, LT_TI_NULLIDX, '!', 4));
 		return;
 	}
 	if (execute(fstNot)) {
-		Add(tableOfLexem, createStructLexem(LEX_NOT, numberOfstring, LT_TI_NULLIDX, '!', 2));
+		Add(tableOfLexem, createStructLexem(LEX_NOT, numberOfstring, LT_TI_NULLIDX, '!', 4));
 		return;
 	}
 
@@ -538,7 +539,7 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		IT::Entry* view = new IT::Entry;
 		*view = stackCall.top();
 
-		IT::Entry newEntry = createStructId((char*)text, tableOfLexem->size, typeData, typeID, littype, NULL, view);
+		IT::Entry newEntry = createStructId((char*)text, ((tableOfLexem->size)-1), typeData, typeID, littype, NULL, view);
 		if ((*typeID == 2)) {
 			stackCall.push(newEntry);			
 		}
