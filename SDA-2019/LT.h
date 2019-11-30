@@ -4,10 +4,10 @@
 #define LEXEMA_FIXSIZE 1
 #define LT_MAXSIZE 4096
 #define LT_TI_NULLIDX 0xffffff
-#define LEX_INT 'i'
-#define LEX_STR 'i'
-#define LEX_ID 'I'
-#define LEX_LITERAL 'L'
+#define LEX_INT 't'
+#define LEX_STR 't'
+#define LEX_ID 'i'
+#define LEX_LITERAL 'l'
 #define LEX_DEF 'd'
 #define LEX_RETURN 'r'
 #define LEX_OUT 'o'
@@ -24,8 +24,8 @@
 #define LEX_DIRSLASH 'v'
 #define LEX_REM 'v'
 #define LEX_EQUAL '='
-#define LEX_FULLEQUAL 'l'
-#define LEX_MAIN 'M'
+#define LEX_FULLEQUAL '='
+#define LEX_MAIN 'm'
 #define LEX_IF 'f'
 #define LEX_ELIF 'e'
 #define LEX_ELSE 's'

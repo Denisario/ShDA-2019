@@ -7,26 +7,26 @@
 #define MFST_DIAGN_MAXSIZE 2*ERROR_MAXSIZE_MESSAGE
 #define MFST_DIAGN_NUMBER 3
 #define MFST_TRACE_START	std::cout << std::setw(4) << std::left << "Шаг" << ": " \
-									  << std::setw(20) << std::left << "Правило" \
-									  << std::setw(30) << std::left << "Входная лента" \
+									  << std::setw(40) << std::left << "Правило" \
+									  << std::setw(50) << std::left << "Входная лента" \
 									  << std::setw(20) << std::left << "Стек" \
 									  << std::endl;
 
 #define MFST_TRACE1		std::cout << std::setw(4) << std::left << ++FST_TRACE_n << ": " \
-								  << std::setw(20) << std::left << rule.getCRule(rbuf, nrulechain) \
-								  << std::setw(30) << std::left << getCLenta(lbuf, lenta_position) \
+								  << std::setw(40) << std::left << rule.getCRule(rbuf, nrulechain) \
+								  << std::setw(50) << std::left << getCLenta(lbuf, lenta_position) \
 								  << std::setw(20) << std::left << getCSt(sbuf) \
 								  << std::endl;
 
 #define MFST_TRACE2		std::cout << std::setw(4) << std::left << FST_TRACE_n<<": " \
-								  << std::setw(20) << std::left << " " \
-								  << std::setw(30) << std::left << getCLenta(lbuf, lenta_position) \
+								  << std::setw(40) << std::left << " " \
+								  << std::setw(50) << std::left << getCLenta(lbuf, lenta_position) \
 								  << std::setw(20) << std::left << getCSt(sbuf) \
 								  << std::endl;
 
 #define MFST_TRACE3		std::cout << std::setw(4) << std::left << ++FST_TRACE_n <<": " \
-								  << std::setw(20) << std::left << " " \
-								  << std::setw(30) << std::left << getCLenta(lbuf, lenta_position) \
+								  << std::setw(40) << std::left << " " \
+								  << std::setw(50) << std::left << getCLenta(lbuf, lenta_position) \
 								  << std::setw(20) << std::left << getCSt(sbuf) \
 								  << std::endl;
 
