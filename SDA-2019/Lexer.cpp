@@ -539,7 +539,7 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		IT::Entry* view = new IT::Entry;
 		*view = stackCall.top();
 
-		IT::Entry newEntry = createStructId((char*)text, ((tableOfLexem->size)-1), typeData, typeID, littype, NULL, view);
+		IT::Entry newEntry = createStructId((char*)text, tableOfLexem->size, typeData, typeID, littype, NULL, view);
 		if ((*typeID == 2)) {
 			stackCall.push(newEntry);			
 		}
@@ -552,7 +552,7 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 			if (!strcmp(newEntry.id, newIdTable->table[i].id) && (newEntry.view == newIdTable->table[i].view)) idInTable = true;
 		}
 		
-			Add(tableOfLexem, createStructLexem(LEX_ID, numberOfstring, newIdTable->size));
+			Add(tableOfLexem, createStructLexem(LEX_ID, numberOfstring, newIdTable->size-1));
 		return;
 	}
 	cout << text;

@@ -30,15 +30,39 @@ namespace Semantics {
 
 		//check names in ID
 
+		for (int i = 0; i < table.LEXTABLE->size; i++) {
+			if ((LT::GetEntry(table.LEXTABLE, i).lexema == 't') && !(LT::GetEntry(table.LEXTABLE, i + 1).lexema == 'i')) {
+				line = LT::GetEntry(table.LEXTABLE, i + 1).sn-1;
+				throw ERROR_THROW_IN(302,line, NULL);
+			}			
+		}
+		//check unique of identifiers
+		string semicolon=";", lexem, lexem2;
 		for (int i = 0; i < table.IDTABLE->size; i++) {
-			id = table.IDTABLE->table[i].id;
-			for (int j = 0; j < resWords.size(); j++) {
-				if (id == resWords[j]) {
-					unsigned short idinlt;
-					line = table.LEXTABLE->table[table.IDTABLE->table[i].idxfirstLE].sn;
-					throw ERROR_THROW_IN(302, line, NULL);
+			if (table.IDTABLE->table[i].littype == -1) {
+				for (int j = i+1; j < table.IDTABLE->size; j++) {
+					
+					if ((!strcmp(table.IDTABLE->table[i].id, table.IDTABLE->table[j].id))&&(!strcmp(table.IDTABLE->table[i].view->id, table.IDTABLE->table[j].view->id))) {
+						lexem = table.LEXTABLE->table[table.IDTABLE->table[i].idxfirstLE+1].lexema;
+						lexem2 = table.LEXTABLE->table[table.IDTABLE->table[j].idxfirstLE+1].lexema;
+						if (lexem==semicolon&&lexem2==semicolon) {
+							throw ERROR_THROW(303);
+						}
+					}
 				}
 			}
+			else {
+				continue;
+			}		
 		}
+		//check type of returned literal
+		int type, typeOfFunction;
+		for (int i = 0; i < table.LEXTABLE->size; i++) {
+			if (LT::GetEntry(table.LEXTABLE, i).lexema == 't') {
+				/*type = (IT::IDDATATYPE)table.IDTABLE->table[(LT::GetEntry(table.LEXTABLE, i)).idxTI].iddatatype;*/
+				cout << type;
+			}
+		}
+
 	}
 }

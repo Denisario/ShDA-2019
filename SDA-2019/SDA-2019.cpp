@@ -23,12 +23,12 @@ int _tmain(int argc, _TCHAR **argv)
 		Log::WriteIn(log, in);	
 		cout << in.ucTextFormated;
 		Tables tables = createTables(in);
+		Print(tables);
 		Semantics::startSem(tables);
-		MFST_TRACE_START
-			Print(tables);
+		/*MFST_TRACE_START*/
 		Log::Close(log);
-		MFST::Mfst mfst(tables, GRB::getGreibach());
-		mfst.start();
+		/*MFST::Mfst mfst(tables, GRB::getGreibach());
+		mfst.start();*/
 
 	}
 	catch (Error::ERROR e)
