@@ -166,6 +166,7 @@
     <ClInclude Include="Parm.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Rules.h" />
+    <ClInclude Include="Semantics.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Error.cpp" />
@@ -185,6 +186,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="SDA-2019.cpp" />
+    <ClCompile Include="Semantics.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

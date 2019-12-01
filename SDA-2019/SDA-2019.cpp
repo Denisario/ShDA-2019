@@ -8,6 +8,7 @@
 #include "LT.h"
 #include "Parm.h"
 #include "MFST.h"
+#include "Semantics.h"
 int _tmain(int argc, _TCHAR **argv)
 {
 	setlocale(LC_ALL, "rus");
@@ -22,6 +23,7 @@ int _tmain(int argc, _TCHAR **argv)
 		Log::WriteIn(log, in);	
 		cout << in.ucTextFormated;
 		Tables tables = createTables(in);
+		Semantics::startSem(tables);
 		MFST_TRACE_START
 			Print(tables);
 		Log::Close(log);
