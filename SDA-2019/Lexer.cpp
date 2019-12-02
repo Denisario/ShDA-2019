@@ -12,6 +12,7 @@ using namespace LT;
 int counterLiteral = 0;
 int counterTokenInProgram = 0;
 int haveMain = 0;
+int counterID = 0;
 bool haveIF = false;
 stack <IT::Entry> stackCall;
 char* stringToChar(string str) {
@@ -60,7 +61,7 @@ IT::Entry createStructId(char* id, int line, int*typeData, int*typeID, int*litty
 	}
 	else
 	{
-		if (((int)newItEntry.iddatatype == 1)&&((int)newItEntry.littype==2))
+		if (((int)newItEntry.iddatatype == 1)&&((int)newItEntry.littype==1))
 		{
 			newItEntry.value.vint = atoi(lexema);
 		}
@@ -468,16 +469,16 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		int*t3 = new int;
 		*t = 1;
 		*t2 = 4;
-		*t3 = 2;
+		*t3 = 1;
 		string numberLi = "lI";
 		string num = to_string(counterLiteral++);
 		/*_itoa_s(counterTokenInProgram, numberLi, 10);*/
-		IT::Entry newEntry = createStructId(stringToChar(numberLi+num), numberOfstring, t, t2,t3, (char*)text);
+		IT::Entry newEntry = createStructId(stringToChar(numberLi+num), tableOfLexem->size, t, t2,t3, (char*)text);
 		
 		IT::Add(newIdTable, newEntry);
 		for (int i = 0; i < newIdTable->size; i++)
 		{
-			if (!strcmp(newEntry.id, newIdTable->table[i].id)) 	Add(tableOfLexem, createStructLexem(LEX_LITERAL, numberOfstring, i));
+			if (!strcmp(newEntry.id, newIdTable->table[i].id)) 	Add(tableOfLexem, createStructLexem(LEX_LITERAL, numberOfstring, counterID++));
 		}
 		counterTokenInProgram++;
 		delete t;
@@ -496,12 +497,12 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		string num = to_string(counterLiteral++);
 		/*_itoa_s(counterTokenInProgram, numberLi, 10);*/
 		IT::Entry newEntry;
-		newEntry= createStructId(stringToChar(numberLi + num), numberOfstring, t, t2,t3, (char*)text);
+		newEntry= createStructId(stringToChar(numberLi + num), tableOfLexem->size, t, t2,t3, (char*)text);
 		newEntry.littype = (IT::LITERALTYPE)3;
 		IT::Add(newIdTable, newEntry);
 		for (int i = 0; i < newIdTable->size; i++)
 		{
-			if (!strcmp(newEntry.id, newIdTable->table[i].id)) 	Add(tableOfLexem, createStructLexem(LEX_LITERAL, numberOfstring, i));
+			if (!strcmp(newEntry.id, newIdTable->table[i].id)) 	Add(tableOfLexem, createStructLexem(LEX_LITERAL, numberOfstring, counterID++));
 		}
 		counterTokenInProgram++;
 		delete t;
@@ -517,17 +518,17 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		int*t3 = new int;
 		*t = 2;
 		*t2 = 4;
-		*t3 = 1;
+		*t3 = 2;
 		string numberLi="lS";
 		string num = to_string(counterLiteral++);
 		
 		/*_itoa_s(counterTokenInProgram, numberLi, 10);*/
-		IT::Entry newEntry = createStructId(stringToChar(numberLi+num), numberOfstring, t, t2, t3,(char*)text);
-		newEntry.littype = (IT::LITERALTYPE)1;
+		IT::Entry newEntry = createStructId(stringToChar(numberLi+num), tableOfLexem->size, t, t2, t3,(char*)text);
+		newEntry.littype = (IT::LITERALTYPE)2;
 		IT::Add(newIdTable, newEntry);
 		for (int i = 0; i < newIdTable->size; i++)
 		{
-			if (!strcmp(newEntry.id, newIdTable->table[i].id)) 	Add(tableOfLexem, createStructLexem(LEX_LITERAL, numberOfstring, i));
+			if (!strcmp(newEntry.id, newIdTable->table[i].id)) 	Add(tableOfLexem, createStructLexem(LEX_LITERAL, numberOfstring, counterID++));
 		}
 		counterTokenInProgram++;
 		delete t;
@@ -539,7 +540,7 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 		IT::Entry* view = new IT::Entry;
 		*view = stackCall.top();
 
-		IT::Entry newEntry = createStructId((char*)text, tableOfLexem->size, typeData, typeID, littype, NULL, view);
+		IT::Entry newEntry = createStructId((char*)text, counterID++, typeData, typeID, littype, NULL, view);
 		if ((*typeID == 2)) {
 			stackCall.push(newEntry);			
 		}

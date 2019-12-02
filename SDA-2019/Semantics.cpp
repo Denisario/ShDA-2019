@@ -55,14 +55,33 @@ namespace Semantics {
 				continue;
 			}		
 		}
-		//check type of returned literal
-		int type, typeOfFunction;
-		for (int i = 0; i < table.LEXTABLE->size; i++) {
-			if (LT::GetEntry(table.LEXTABLE, i).lexema == 't') {
-				/*type = (IT::IDDATATYPE)table.IDTABLE->table[(LT::GetEntry(table.LEXTABLE, i)).idxTI].iddatatype;*/
-				cout << type;
+		//check type of returned literal and return
+		unsigned short type, typeOfFunction;
+		/*bool hasReturn=false;
+		int indLeftBraclet=0;
+		for (int i = 0; i < table.LEXTABLE->size; i++) { 
+			if (LT::GetEntry(table.LEXTABLE, i).lexema == 'd'&&LT::GetEntry(table.LEXTABLE, i + 2).lexema == 'i') {
+				typeOfFunction = (IT::IDDATATYPE)table.IDTABLE->table[(LT::GetEntry(table.LEXTABLE, i + 2)).idxTI].iddatatype;
 			}
 		}
+		for (int i = 0; i < table.LEXTABLE->size; i++) {
+			if (LT::GetEntry(table.LEXTABLE, i).lexema == 'r') {
+				hasReturn = true;
+				type = (IT::LITERALTYPE)table.IDTABLE->table[((LT::GetEntry(table.LEXTABLE, i + 1)).idxTI)].littype;
+			}
+			cout << type << " " << typeOfFunction << endl;
+		}
+		if (type != typeOfFunction) throw ERROR_THROW(304);*/
+		//check return of main
 
+		for (int i = 0; i < table.LEXTABLE->size; i++) {
+			if (LT::GetEntry(table.LEXTABLE, i).lexema == 'm') {
+				for (int j = i; j < table.LEXTABLE->size; j++) {
+					if (LT::GetEntry(table.LEXTABLE, j).lexema == 'r'&&LT::GetEntry(table.LEXTABLE, j + 1).lexema == 'l') {
+						if(table.IDTABLE->table[LT::GetEntry(table.LEXTABLE, j + 1).idxTI].value.vint!=0) throw ERROR_THROW(305);
+					}
+				}
+			}			
+		}
 	}
 }

@@ -22,9 +22,9 @@ namespace IT
 		L = 4                         //литерал
 	};
 	enum LITERALTYPE {
-		S=1,
-		D=2,
-		O=3
+		I=1,
+		S=2,
+		D=3
 	};
 	struct Entry
 	{
