@@ -13,6 +13,7 @@ namespace Semantics {
 		//check main
 		unsigned short usMain = 0;
 		unsigned short line = 0;
+		unsigned short counterFunction = 0;
 		LT::Entry LexTable;
 		IT::Entry IdTable;
 		string id;
@@ -24,7 +25,7 @@ namespace Semantics {
 			}
 		}
 		if (usMain == 0) {
-			throw ERROR_THROW(300)
+			throw ERROR_THROW(300);
 		}
 		else if (usMain > 1) throw ERROR_THROW_IN(301, line, NULL);
 
@@ -36,6 +37,7 @@ namespace Semantics {
 				throw ERROR_THROW_IN(302,line, NULL);
 			}			
 		}
+		line = 0;
 		//check unique of identifiers
 		string semicolon=";", lexem, lexem2;
 		for (int i = 0; i < table.IDTABLE->size; i++) {
@@ -56,24 +58,35 @@ namespace Semantics {
 			}		
 		}
 		//check type of returned literal and return
-		unsigned short type, typeOfFunction;
-		/*bool hasReturn=false;
-		int indLeftBraclet=0;
-		for (int i = 0; i < table.LEXTABLE->size; i++) { 
-			if (LT::GetEntry(table.LEXTABLE, i).lexema == 'd'&&LT::GetEntry(table.LEXTABLE, i + 2).lexema == 'i') {
-				typeOfFunction = (IT::IDDATATYPE)table.IDTABLE->table[(LT::GetEntry(table.LEXTABLE, i + 2)).idxTI].iddatatype;
-			}
+
+		int LTStartFunction = 0, LTFinishFunction = 0, type = 0, functionType = 0;
+
+		for (int j = 0; j < table.LEXTABLE->size; j++) {
+			if (LT::GetEntry(table.LEXTABLE, j).lexema == 'd'&&LT::GetEntry(table.LEXTABLE, j + 2).lexema == 'i') counterFunction++;
 		}
-		for (int i = 0; i < table.LEXTABLE->size; i++) {
-			if (LT::GetEntry(table.LEXTABLE, i).lexema == 'r') {
-				hasReturn = true;
-				type = (IT::LITERALTYPE)table.IDTABLE->table[((LT::GetEntry(table.LEXTABLE, i + 1)).idxTI)].littype;
+		for (int k = 0; k < counterFunction; k++) {
+			for (int i = LTFinishFunction; i < table.LEXTABLE->size; i++) {
+				if (LT::GetEntry(table.LEXTABLE, i).lexema == 'd'&&LT::GetEntry(table.LEXTABLE, i + 2).lexema == 'i') {
+					LTStartFunction = i;
+					break;
+				}
+
 			}
-			cout << type << " " << typeOfFunction << endl;
+			for (int i = LTFinishFunction+1; i < table.LEXTABLE->size; i++) {
+				if (LT::GetEntry(table.LEXTABLE, i).lexema == '}') {
+					LTFinishFunction = i;
+					break;
+				}
+			}			
+			type = table.IDTABLE->table[LT::GetEntry(table.LEXTABLE, LTStartFunction + 2).idxTI].iddatatype;
+			functionType = table.IDTABLE->table[LT::GetEntry(table.LEXTABLE, LTFinishFunction-2).idxTI].littype;
+			cout << LTStartFunction << " " << LTFinishFunction <<" "<<type<<" "<<functionType<< endl;
+			if (type != functionType) throw ERROR_THROW(304);
 		}
-		if (type != typeOfFunction) throw ERROR_THROW(304);*/
 		//check return of main
 
+
+		
 		for (int i = 0; i < table.LEXTABLE->size; i++) {
 			if (LT::GetEntry(table.LEXTABLE, i).lexema == 'm') {
 				for (int j = i; j < table.LEXTABLE->size; j++) {
