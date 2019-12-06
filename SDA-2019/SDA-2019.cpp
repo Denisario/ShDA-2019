@@ -5,6 +5,7 @@
 #include "In.h"
 #include "Lexer.h"
 #include "IT.h"
+#include "Polska.h"
 #include "LT.h"
 #include "Parm.h"
 #include "MFST.h"
@@ -24,12 +25,23 @@ int _tmain(int argc, _TCHAR **argv)
 		Log::WriteIn(log, in);	
 		cout << in.ucTextFormated;
 		Tables tables = createTables(in);
+		PN polska;
 		Print(tables);
 		Semantics::startSem(tables);
-		/*MFST_TRACE_START*/
+		MFST_TRACE_START
 		Log::Close(log);
-		/*MFST::Mfst mfst(tables, GRB::getGreibach());
-		mfst.start();*/
+		MFST::Mfst mfst(tables, GRB::getGreibach());
+		mfst.start();
+		if (polska.searchExpression(tables))
+		{
+			std::cout << std::endl << "Польская запись построена!" << std::endl;
+
+		}
+		else {
+			std::cout << std::endl << "Польская запись не построена!" << std::endl;
+
+		}
+		polska.Print(tables);
 		ASMGenerator::Add();
 
 	}

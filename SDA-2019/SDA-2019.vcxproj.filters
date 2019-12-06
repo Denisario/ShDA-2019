@@ -55,7 +55,10 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="ASMGenerator.h">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Polska.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -99,6 +102,9 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="ASMGenerator.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Polska.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

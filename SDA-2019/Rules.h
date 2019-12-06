@@ -63,9 +63,17 @@ namespace GRB
 		),
 		Rule(
 			NS('M'), GRB_ERROR_SERIES + 6,    // оператор
-			2,								  //
-			Rule::Chain(2, TS('v'), NS('E')),
-			Rule::Chain(3, TS('v'), NS('E'), NS('M'))
+			10,								  //
+			Rule::Chain(2, TS('+'), NS('E')),
+			Rule::Chain(2, TS('-'), NS('E')),
+			Rule::Chain(2, TS('*'), NS('E')),
+			Rule::Chain(2, TS('/'), NS('E')),
+			Rule::Chain(2, TS(':'), NS('E')),
+			Rule::Chain(3, TS('+'), NS('E'), NS('M')),
+			Rule::Chain(3, TS('-'), NS('E'), NS('M')),
+			Rule::Chain(3, TS('*'), NS('E'), NS('M')),
+			Rule::Chain(3, TS('/'), NS('E'), NS('M')),
+			Rule::Chain(3, TS(':'), NS('E'), NS('M'))
 		)
 	);
 }

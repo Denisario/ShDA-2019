@@ -166,6 +166,7 @@
     <ClInclude Include="LT.h" />
     <ClInclude Include="Parm.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Polska.h" />
     <ClInclude Include="Rules.h" />
     <ClInclude Include="Semantics.h" />
   </ItemGroup>
@@ -187,6 +188,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Polska.cpp" />
     <ClCompile Include="SDA-2019.cpp" />
     <ClCompile Include="Semantics.cpp" />
   </ItemGroup>
