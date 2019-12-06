@@ -9,6 +9,7 @@
 #include "Parm.h"
 #include "MFST.h"
 #include "Semantics.h"
+#include "ASMGenerator.h"
 int _tmain(int argc, _TCHAR **argv)
 {
 	setlocale(LC_ALL, "rus");
@@ -29,6 +30,7 @@ int _tmain(int argc, _TCHAR **argv)
 		Log::Close(log);
 		/*MFST::Mfst mfst(tables, GRB::getGreibach());
 		mfst.start();*/
+		ASMGenerator::Add();
 
 	}
 	catch (Error::ERROR e)

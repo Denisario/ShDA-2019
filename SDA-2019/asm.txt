@@ -1,0 +1,14 @@
+.586
+.model flat,stdcall
+includelib libucrt.lib
+includelib kernel32.lib
+
+.stack 4096
+
+.const
+
+.data
+
+main PROC
+
+end main
