@@ -43,7 +43,7 @@ int _tmain(int argc, _TCHAR **argv)
 		polska.Print(tables);
 		CheckLTIT(tables);
 		Print(tables);
-		ASMGenerator::Add();
+		ASMGenerator::Generate(tables);
 
 	}
 	catch (Error::ERROR e)

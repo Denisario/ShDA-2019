@@ -289,9 +289,9 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 
 
 	FST fstLiteralOfString(text, 3,
-		NODE(1, RELATION('\'', 1)),
+		NODE(1, RELATION('\"', 1)),
 		NODE(71,
-			RELATION('\'', 2), RELATION('a', 1), RELATION('b', 1), RELATION('c', 1), RELATION('d', 1),
+			RELATION('\"', 2), RELATION('a', 1), RELATION('b', 1), RELATION('c', 1), RELATION('d', 1),
 			RELATION('e', 1), RELATION('f', 1), RELATION('g', 1), RELATION('h', 1), RELATION('i', 1), RELATION('j', 1),
 			RELATION('k', 1), RELATION('l', 1), RELATION('m', 1), RELATION('n', 1), RELATION('o', 1), RELATION('p', 1),
 			RELATION('q', 1), RELATION('r', 1), RELATION('s', 1), RELATION('t', 1), RELATION('u', 1), RELATION('v', 1),
@@ -511,8 +511,8 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 	}
 	if (execute(fstLiteralOfString)) {
 		int size = strlen(text);
-		if (size > 257) throw ERROR_THROW(201);
-		if (text[size-1] != '\'') throw ERROR_THROW(202);
+		if (size > 257) throw ERROR_THROW(200);
+		if (text[size-1] != '\"') throw ERROR_THROW(201);
 		int*t = new int;
 		int*t2 = new int;
 		int*t3 = new int;

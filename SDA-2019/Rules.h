@@ -11,20 +11,20 @@ namespace GRB
 	Greibach greibach(NS('S'), TS('$'),
 		7,
 		Rule(
-			NS('S'), GRB_ERROR_SERIES + 0,
+			NS('S'), GRB_ERROR_SERIES + 1,
 			2,	
 			Rule::Chain(10, TS('d'), TS('t'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'),NS('N'), TS('}'), NS('S')),
 			Rule::Chain(5,  TS('d'), TS('m'), TS('{'), NS('N'),TS('}'))
 		),
 
 		Rule(
-			NS('F'), GRB_ERROR_SERIES + 1,
+			NS('F'), GRB_ERROR_SERIES + 2,
 			2,
 			Rule::Chain(2, TS('t'), TS('i')),
 			Rule::Chain(4, TS('t'), TS('i'), TS(','), NS('F'))
 		),
 		Rule(
-			NS('N'), GRB_ERROR_SERIES+2,
+			NS('N'), GRB_ERROR_SERIES+3,
 			7,
 			Rule::Chain(5,TS('a'), TS('t'), TS('i'),TS(';'), NS('N')),
 			Rule::Chain(4,TS('a'), TS('t'), TS('i'),TS(';')),
@@ -36,7 +36,7 @@ namespace GRB
 			Rule::Chain(9, TS('f'), TS('('), TS('l'), TS(')'), TS('['), NS('N'), TS(']'), NS('C'),NS('N'))
 		),
 		Rule(
-			NS('W'), GRB_ERROR_SERIES+3,
+			NS('W'), GRB_ERROR_SERIES+4,
 			4,
 			Rule::Chain(1, TS('i')),
 			Rule::Chain(1, TS('l')),
@@ -44,14 +44,14 @@ namespace GRB
 			Rule::Chain(3, TS('l'),TS(','), NS('W'))
 		),
 		Rule(
-			NS('C'), GRB_ERROR_SERIES+4,
+			NS('C'), GRB_ERROR_SERIES+5,
 			2,
 			Rule::Chain(8, TS('e'), TS('('), TS('l'), TS(')'), TS('['), NS('N'), TS(']'), NS('C')),
 			Rule::Chain(4, TS('s'), TS('['), NS('N'), TS(']'))
 		),
 		Rule(
-			NS('E'), GRB_ERROR_SERIES + 5,    // ошибка в выражении
-			8,                                // 
+			NS('E'), GRB_ERROR_SERIES + 6,    // ошибка в выражении
+			8,                               // 
 			Rule::Chain(1, TS('i')),
 			Rule::Chain(1, TS('l')),
 			Rule::Chain(3, TS('('), NS('E'), TS(')')),
@@ -62,7 +62,7 @@ namespace GRB
 			Rule::Chain(5, TS('i'), TS('('), NS('W'), TS(')'), NS('M'))
 		),
 		Rule(
-			NS('M'), GRB_ERROR_SERIES + 6,    // оператор
+			NS('M'), GRB_ERROR_SERIES + 7,    // оператор
 			10,								  //
 			Rule::Chain(2, TS('+'), NS('E')),
 			Rule::Chain(2, TS('-'), NS('E')),

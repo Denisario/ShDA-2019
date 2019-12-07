@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include "LT.h"
-
+#include "Lexer.h"
 
 #define ASM_START_BLOCK                       ".586\n.model flat,stdcall\n"
 #define ASM_LIBS_BLOCK                        "includelib libucrt.lib\nincludelib kernel32.lib\n"
@@ -14,5 +14,8 @@
 
 
 namespace ASMGenerator {
-	void Add();
+	void AddSystemInfo();
+	void AddConstInfo(Tables table);
+	void AddDataInfo(Tables table);
+	void Generate(Tables table);
 }

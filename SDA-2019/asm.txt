@@ -1,0 +1,22 @@
+.586
+.model flat,stdcall
+includelib libucrt.lib
+includelib kernel32.lib
+
+.stack 4096
+
+.const
+	lS0 BYTE "xyz" , 0
+	lI1 SDWORD  0
+	lI2 SDWORD  0
+
+.data
+	x SDWORD  0
+	x SDWORD  0
+	y SDWORD  0
+	z SDWORD  0
+	literal SDWORD  0
+	z SDWORD  0
+	x SDWORD  0
+	y SDWORD  0
+	z SDWORD  0
