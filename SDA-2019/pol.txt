@@ -1,9 +1,13 @@
+dti(ti,ti){
+ati;
+rl;
+}
 dm
 {
 ati;
 ati;
 ati;
-i=ii+;
+i=ii+l*;
 o(i);
 rl;
 }

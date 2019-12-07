@@ -26,7 +26,6 @@ int _tmain(int argc, _TCHAR **argv)
 		cout << in.ucTextFormated;
 		Tables tables = createTables(in);
 		PN polska;
-		Print(tables);
 		Semantics::startSem(tables);
 		MFST_TRACE_START
 		Log::Close(log);
@@ -42,6 +41,8 @@ int _tmain(int argc, _TCHAR **argv)
 
 		}
 		polska.Print(tables);
+		CheckLTIT(tables);
+		Print(tables);
 		ASMGenerator::Add();
 
 	}

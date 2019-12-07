@@ -714,3 +714,12 @@ void Print(Tables tables)
 	}
 	
 }
+
+void CheckLTIT(Tables table) {
+	int id = 0;
+	for (int i = 0; i < table.LEXTABLE->size; i++) {
+		if (table.LEXTABLE->table[i].lexema == LEX_ID || table.LEXTABLE->table[i].lexema == LEX_LITERAL) {
+			table.IDTABLE->table[id++].idxfirstLE = i;
+		}
+	}
+}
