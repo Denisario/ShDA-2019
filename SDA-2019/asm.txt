@@ -6,17 +6,14 @@ includelib kernel32.lib
 .stack 4096
 
 .const
-	lS0 BYTE "xyz" , 0
+	lS0 BYTE "fafsd" , 0
 	lI1 SDWORD  0
 	lI2 SDWORD  0
 
 .data
-	x SDWORD  0
-	x SDWORD  0
-	y SDWORD  0
-	z SDWORD  0
-	literal SDWORD  0
-	z SDWORD  0
-	x SDWORD  0
-	y SDWORD  0
-	z SDWORD  0
+	    ou SDWORD  0
+	     x SDWORD  0
+	     y SDWORD  0
+	     z SDWORD  0
+	   fds SDWORD  0
+	 liter SDWORD  0

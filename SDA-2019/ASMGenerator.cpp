@@ -32,9 +32,9 @@ namespace ASMGenerator {
 			/*for (int j = 0; j < 4; j++) {
 				name = table.IDTABLE->table[i].view->id;
 			}*/
-			if (table.IDTABLE->table[i].idtype == 1) {
+			if (table.IDTABLE->table[i].littype == -1&& table.IDTABLE->table[i].idtype==1) {
 				
-				asmFile << "\t" << table.IDTABLE->table[i].id << " SDWORD " << table.IDTABLE->table[i].value.vstr->str << " 0" << endl;
+				asmFile << "\t" <<setw(6)<< table.IDTABLE->table[i].id << " SDWORD " << table.IDTABLE->table[i].value.vstr->str << " 0" << endl;
 				name.clear();
 			}
 		}

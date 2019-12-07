@@ -47,16 +47,16 @@ namespace Semantics {
 					if ((!strcmp(table.IDTABLE->table[i].id, table.IDTABLE->table[j].id))&&(!strcmp(table.IDTABLE->table[i].view->id, table.IDTABLE->table[j].view->id))) {
 						lexem = table.LEXTABLE->table[table.IDTABLE->table[i].idxfirstLE+1].lexema;
 						lexem2 = table.LEXTABLE->table[table.IDTABLE->table[j].idxfirstLE+1].lexema;
-						if (lexem==semicolon&&lexem2==semicolon) {
+						/*if (lexem==semicolon&&lexem2==semicolon) {
 							throw ERROR_THROW(303);
-						}
+						}*/
 					}
 				}
 			}
 			else {
 				continue;
 			}		
-		}
+		}//rework
 		//check type of returned literal and return
 
 		int LTStartFunction = 0, LTFinishFunction = 0, type = 0, functionType = 0;

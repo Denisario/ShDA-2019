@@ -208,13 +208,13 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 
 	FST fstOctalLiteral(text, 3,
 		NODE(1, RELATION('0',1)),
-		NODE(16, RELATION('0', 1), RELATION('1', 1), RELATION('2', 1), RELATION('3', 1), RELATION('4', 1), RELATION('5', 1), RELATION('6', 1),RELATION('7', 1),
+		NODE(15, RELATION('1', 1), RELATION('2', 1), RELATION('3', 1), RELATION('4', 1), RELATION('5', 1), RELATION('6', 1),RELATION('7', 1),
 				 RELATION('0', 2), RELATION('1', 2), RELATION('2', 2), RELATION('3', 2), RELATION('4', 2), RELATION('5', 2), RELATION('6', 2), RELATION('7', 2)),
 			NODE()
 	);
 
 	FST fstLiteralOfInteger(text, 2,
-		NODE(20, RELATION('0', 0), RELATION('1', 0), RELATION('2', 0), RELATION('3', 0), RELATION('4', 0), RELATION('5', 0), RELATION('6', 0),
+		NODE(19, RELATION('1', 0), RELATION('2', 0), RELATION('3', 0), RELATION('4', 0), RELATION('5', 0), RELATION('6', 0),
 			RELATION('7', 0), RELATION('8', 0), RELATION('9', 0),
 			RELATION('0', 1), RELATION('1', 1), RELATION('2', 1), RELATION('3', 1), RELATION('4', 1), RELATION('5', 1), RELATION('6', 1),
 			RELATION('7', 1), RELATION('8', 1), RELATION('9', 1)),
@@ -539,6 +539,7 @@ void initTypeLexem(const char* text, string tmp, LexTable* tableOfLexem, int num
 	if (execute(fstId)) {
 		IT::Entry* view = new IT::Entry;
 		*view = stackCall.top();
+		
 
 		IT::Entry newEntry = createStructId((char*)text, counterID++, typeData, typeID, littype, NULL, view);
 		if ((*typeID == 2)) {
@@ -717,9 +718,52 @@ void Print(Tables tables)
 
 void CheckLTIT(Tables table) {
 	int id = 0;
+	int tmp;
 	for (int i = 0; i < table.LEXTABLE->size; i++) {
 		if (table.LEXTABLE->table[i].lexema == LEX_ID || table.LEXTABLE->table[i].lexema == LEX_LITERAL) {
 			table.IDTABLE->table[id++].idxfirstLE = i;
 		}
 	}
+
+	int startPos = 0, finishPos = 0, counterFunc=0;
+	string name;
+	int posInLT = 0;
+	for (int i = 0; i < table.LEXTABLE->size; i++) {
+		if (table.LEXTABLE->table[i].lexema == 'd') counterFunc++;
+
+	}
+
+	for (int k = 0; k < counterFunc; k++) {
+		for (int i = finishPos; i < table.LEXTABLE->size; i++) {
+			if (LT::GetEntry(table.LEXTABLE, i).lexema == '{') {
+				startPos = i;
+				break;
+			}
+
+		}
+		for (int i = finishPos + 1; i < table.LEXTABLE->size; i++) {
+			if (LT::GetEntry(table.LEXTABLE, i).lexema == '}') {
+				finishPos = i;
+				break;
+			}
+		}
+		cout << startPos << " " << finishPos << endl;
+		for (int i = startPos; i < finishPos; i++) {
+			if (table.LEXTABLE->table[i-1].lexema == 't'&&table.LEXTABLE->table[i].lexema == 'i') {
+				name = table.IDTABLE->table[table.LEXTABLE->table[i].idxTI].id;				
+				for (int j = i + 1; j < finishPos; j++) {
+					if (table.LEXTABLE->table[j].lexema == 'i') {
+						posInLT = table.LEXTABLE->table[j].idxTI;
+						if (table.IDTABLE->table[table.LEXTABLE->table[j].idxTI].id == name) {
+							table.IDTABLE->table[table.LEXTABLE->table[j].idxTI].littype = (IT::LITERALTYPE)3;
+							if (table.IDTABLE->table[table.LEXTABLE->table[j].idxTI].idtype == 1) table.IDTABLE->table[table.LEXTABLE->table[j].idxTI].littype = (IT::LITERALTYPE)1;
+							if (table.IDTABLE->table[table.LEXTABLE->table[j].idxTI].idtype == 2) table.IDTABLE->table[table.LEXTABLE->table[j].idxTI].littype = (IT::LITERALTYPE)2;
+							table.IDTABLE->table[table.LEXTABLE->table[j].idxTI].idxfirstLE = i;
+						}
+					}
+				}
+			}
+		}
+	}
+	
 }
