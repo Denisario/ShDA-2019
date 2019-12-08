@@ -698,10 +698,15 @@ void Print(Tables tables)
 	std::ofstream lt("LT.txt");
 	std::ofstream it("IT.txt");
 	fout << tables.LEXTABLE->LexemText << endl << endl;
+	lt << setw(3) << "№" << setw(10) << "Лексема" << setw(15) << "Номер строки" << setw(10) << "IDxTi"<<endl;
+
+	lt << "---------------------------------------" << endl;
+	lt << "---------------------------------------" << endl;
 	for (int i = 0; i < tables.LEXTABLE->size; i++)
 	{
-		lt << setw(3) << i << ". Лексема: " << tables.LEXTABLE->table[i].lexema << ". Номер строки: "
-			<< tables.LEXTABLE->table[i].sn << ". vType: " << tables.LEXTABLE->table[i].vType << " IDxTi: " << tables.LEXTABLE->table[i].idxTI << endl;
+		lt << setw(3) << i << setw(10) << tables.LEXTABLE->table[i].lexema << setw(15)
+			<< tables.LEXTABLE->table[i].sn  << setw(10) << tables.LEXTABLE->table[i].idxTI << endl;
+		lt << "---------------------------------------" << endl;
 	}
 	for (int i = 0; i < tables.IDTABLE->size; i++)
 	{
