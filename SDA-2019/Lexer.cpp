@@ -751,8 +751,7 @@ void CheckLTIT(Tables table) {
 				finishPos = i;
 				break;
 			}
-		}
-		cout << startPos << " " << finishPos << endl;
+		}		
 		for (int i = startPos; i < finishPos; i++) {
 			if (table.LEXTABLE->table[i-1].lexema == 't'&&table.LEXTABLE->table[i].lexema == 'i') {
 				name = table.IDTABLE->table[table.LEXTABLE->table[i].idxTI].id;				

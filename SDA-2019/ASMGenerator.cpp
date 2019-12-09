@@ -28,13 +28,27 @@ namespace ASMGenerator {
 	void AddDataInfo(Tables table) {
 		asmFile << ASM_DATA_BLOCK;
 		string name;
+		
 		for (int i = 0; i < table.IDTABLE->size; i++) {
 			/*for (int j = 0; j < 4; j++) {
 				name = table.IDTABLE->table[i].view->id;
 			}*/
 			if (table.IDTABLE->table[i].littype == -1&& table.IDTABLE->table[i].idtype==1) {
-				
-				asmFile << "\t" <<setw(6)<< table.IDTABLE->table[i].id << " SDWORD " << table.IDTABLE->table[i].value.vstr->str << " 0" << endl;
+				for (int j = 0; j < 4; j++) {
+					name.push_back(table.IDTABLE->table[i].view->id[j]);
+					if (j == strlen((char*)table.IDTABLE->table[i].view->id)-1) break;
+				}
+				name += "_";
+				asmFile << "\t" <<setw(10)<< name+table.IDTABLE->table[i].id << " SDWORD " << table.IDTABLE->table[i].value.vstr->str << " 0" << endl;
+				name.clear();
+			}
+			if (table.IDTABLE->table[i].littype == -1 && table.IDTABLE->table[i].idtype == 2) {
+				for (int j = 0; j < 1; j++) {
+					name.push_back(table.IDTABLE->table[i].view->id[j]);	
+					if (j == strlen((char*)table.IDTABLE->table[i].view->id) - 1) break;
+				}
+				name += "_";
+				asmFile << "\t" << setw(10) << name+table.IDTABLE->table[i].id << " BYTE 255 DUP(0)" << endl;
 				name.clear();
 			}
 		}
