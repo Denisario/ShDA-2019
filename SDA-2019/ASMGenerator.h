@@ -14,8 +14,14 @@
 
 
 namespace ASMGenerator {
+	string naming(Tables table, int pos);
 	void AddSystemInfo();
 	void AddConstInfo(Tables table);
 	void AddDataInfo(Tables table);
+	void AddFuncInfo(Tables table);
+	void AddCodeBlock();
+	
+	void AddMainProc(Tables table);
+	void AddEndProc();
 	void Generate(Tables table);
 }

@@ -78,6 +78,7 @@ bool PN::PolishNotation(int lextable_pos, Tables& tab) {
 		case LEX_MINUS:
 		case LEX_STAR:
 		case LEX_DIRSLASH:
+		case LEX_REM:
 		{
 			if (!st.size())						//åñëè ïóñòîé ñòåê
 				st.push(tab.LEXTABLE->table[i]);		//ïðîñòî çàïèñûâàåì â âûõîäíóþ ñòðîêó
@@ -114,14 +115,14 @@ bool PN::PolishNotation(int lextable_pos, Tables& tab) {
 		}
 	}
 	tab.LEXTABLE->table[lextable_pos + lenout] = tab.LEXTABLE->table[semicolonid];//âñòàâêà ýëåìåíòà ñ òî÷êîé ñ çàïÿòîé
-	for (int i = 0; i < skob; i++)
-	{
-		for (int j = lextable_pos + lenout + 1; j < tab.LEXTABLE->size; j++)	//ñäâèãàåì íà ëèøíåå ìåñòî, îñòàâøååñÿ îò ñêîáîê
-		{
-			tab.LEXTABLE->table[j] = tab.LEXTABLE->table[j + 1];
-		}
-		tab.LEXTABLE->size--;
-	}
+	//for (int i = 0; i < skob; i++)
+	//{
+	//	for (int j = lextable_pos + lenout + 1; j < tab.LEXTABLE->size; j++)	//ñäâèãàåì íà ëèøíåå ìåñòî, îñòàâøååñÿ îò ñêîáîê
+	//	{
+	//		tab.LEXTABLE->table[j] = tab.LEXTABLE->table[j + 1];
+	//	}
+	//	tab.LEXTABLE->size--;
+	//}
 	return 1;
 }
 int PN::prior(char l) {
@@ -131,6 +132,8 @@ int PN::prior(char l) {
 		return 2;
 	if (l == '*' || l == '/'|| l == ':')
 		return 3;
+	if (l == ':')
+		return 4;
 }
 
 void PN::Print(Tables tables)

@@ -5,13 +5,14 @@
 06 dm
 07 {
 08 ati;
-09 ati;
+09 i=l;
 10 ati;
-11 ati;
-12 i=l;
-13 ati;
-14 i=(i+i)*l;
-15 o(i);
-16 rl;
-17 }
+11 i=l;
+12 ati;
+13 i=l;
+14 ati;
+15 i=(i*i)-i*(i+i*i:i);
+16 o(i);
+17 rl;
+18 }
 

@@ -24,7 +24,7 @@ int _tmain(int argc, _TCHAR **argv)
 		Log::WriteParm(log, parm);
 		Log::WriteIn(log, in);	
 		cout << in.ucTextFormated;
-		Tables tables = createTables(in);
+		Tables tables = Lexer::createTables(in);
 		PN polska;
 		/*Semantics::startSem(tables);*/
 		MFST_TRACE_START
@@ -41,10 +41,11 @@ int _tmain(int argc, _TCHAR **argv)
 
 		}
 		polska.Print(tables);
-		CheckLTIT(tables);
-		Print(tables);
+		
+		Lexer::CheckLTIT(tables);
+		/*Print(tables);*/
 		ASMGenerator::Generate(tables);
-
+		system("start D:\\учёба\\3сем\\Курсач\\compile.bat");
 	}
 	catch (Error::ERROR e)
 	{

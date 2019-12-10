@@ -5,12 +5,13 @@ ri;
 dm
 {
 ati;
-ati;
-ati;
+i=l;
 ati;
 i=l;
 ati;
-i=ii+l*;
+i=l;
+ati;
+i=ii+i:ii-*;-i);
 o(i);
 rl;
 }
