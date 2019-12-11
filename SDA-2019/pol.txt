@@ -1,5 +1,6 @@
-dti(ti,ti){
+dti(ti,ti,ti){
 ati;
+i=ii+i-;
 ri;
 }
 dm
@@ -11,7 +12,7 @@ i=l;
 ati;
 i=l;
 ati;
-i=ii+i:ii-*;-i);
+i=i(i,i,i);
 o(i);
 rl;
 }

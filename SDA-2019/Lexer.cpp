@@ -691,7 +691,7 @@ namespace  Lexer {
 		return newTables;
 	}
 
-	void Print(Tables& tables)
+	void Print(Tables tables)
 	{
 		const char* temp;
 		std::ofstream fout("Lex.txt");
@@ -730,7 +730,7 @@ namespace  Lexer {
 			}
 		}
 
-		int startPos = 0, finishPos = 0, counterFunc = 0;
+		int startPos = 0, finishPos = 0, counterFunc = 0, startParam=0, finish=0;
 		string name;
 		int posInLT = 0;
 		for (int i = 0; i < table.LEXTABLE->size; i++) {
@@ -747,17 +747,53 @@ namespace  Lexer {
 				}
 
 			}
+
+			/*or (int i = finish; i < table.LEXTABLE->size; i++) {
+				if (LT::GetEntry(table.LEXTABLE, i).lexema == '('&&LT::GetEntry(table.LEXTABLE, i-1).lexema == 'i'&&LT::GetEntry(table.LEXTABLE, i-2).lexema == 't') {
+					startParam = i;
+					break;
+				}
+
+			}*/
+			/*for (int i = f+1; i < table.LEXTABLE->size; i++) {
+				if (LT::GetEntry(table.LEXTABLE, i).lexema == '}'&&LT::GetEntry(table.LEXTABLE, i - 2).lexema == 'i') {
+					finish = i;
+					break;
+				}
+
+			}*/
+
+
 			for (int i = finishPos + 1; i < table.LEXTABLE->size; i++) {
 				if (LT::GetEntry(table.LEXTABLE, i).lexema == '}') {
 					finishPos = i;
 					break;
 				}
 			}
+			int type = 0;
+			string paramName;
+			
 			for (int i = startPos; i < finishPos; i++) {
+				for (int j = 0; j < startPos; j++) {
+					if (table.LEXTABLE->table[j].lexema == LEX_ID && table.IDTABLE->table[table.LEXTABLE->table[j].idxTI].idtype == 3) {
+						for (int k = j + 1; k < finishPos; k++) {
+							if (table.LEXTABLE->table[k].lexema == LEX_ID) {
+								if (!strcmp(table.IDTABLE->table[table.LEXTABLE->table[j].idxTI].id , table.IDTABLE->table[table.LEXTABLE->table[k].idxTI].id)) {
+									table.IDTABLE->table[table.LEXTABLE->table[k].idxTI].littype = (IT::LITERALTYPE)1;
+								}
+								
+							}
+							if (table.LEXTABLE->table[k].lexema == LEX_BRACELET) break;
+						}
+					}
+				}
+
+
 				if (table.LEXTABLE->table[i - 1].lexema == 't'&&table.LEXTABLE->table[i].lexema == 'i') {
 					name = table.IDTABLE->table[table.LEXTABLE->table[i].idxTI].id;
-					int type = table.IDTABLE->table[table.LEXTABLE->table[i].idxTI].iddatatype;
+					type = table.IDTABLE->table[table.LEXTABLE->table[i].idxTI].iddatatype;
 					for (int j = i + 1; j < finishPos; j++) {
+						
 						if (table.LEXTABLE->table[j].lexema == 'i') {
 							posInLT = table.LEXTABLE->table[j].idxTI;
 							if (table.IDTABLE->table[table.LEXTABLE->table[j].idxTI].id == name) {
@@ -765,7 +801,7 @@ namespace  Lexer {
 								if (table.IDTABLE->table[table.LEXTABLE->table[j].idxTI].iddatatype == 1) table.IDTABLE->table[table.LEXTABLE->table[j].idxTI].littype = (IT::LITERALTYPE)type;
 								if (table.IDTABLE->table[table.LEXTABLE->table[j].idxTI].iddatatype == 2) table.IDTABLE->table[table.LEXTABLE->table[j].idxTI].littype = (IT::LITERALTYPE)type;
 								table.IDTABLE->table[table.LEXTABLE->table[j].idxTI].idxfirstLE = i;
-
+								
 							}
 						}
 					}

@@ -43,7 +43,7 @@ int _tmain(int argc, _TCHAR **argv)
 		polska.Print(tables);
 		
 		Lexer::CheckLTIT(tables);
-		/*Print(tables);*/
+		Lexer::Print(tables);
 		ASMGenerator::Generate(tables);
 		system("start D:\\учёба\\3сем\\Курсач\\compile.bat");
 	}

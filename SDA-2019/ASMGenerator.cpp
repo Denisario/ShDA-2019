@@ -24,8 +24,24 @@ namespace ASMGenerator {
 	}
 
 	void AddFuncInfo(Tables table) {
-		asmFile << "ExitProcess PROTO : DWORD\n";
+		asmFile << "\n\nExitProcess PROTO : DWORD\n";
 		asmFile << "outint PROTO : DWORD\n";
+
+		//for (int i = 0; i < table.LEXTABLE->size; i++) {
+		//	if (table.LEXTABLE->table[i].lexema == LEX_DEF && table.LEXTABLE->table[i + 1].lexema == LEX_INT) {
+		//		asmFile << table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].id<<':';
+		//		
+		//	}
+		//	/*if (table.LEXTABLE->table[i].lexema == LEX_LEFTHESIS) {
+		//		while (table.LEXTABLE->table[i].lexema != LEX_RIGHTHESIS) {
+		//			if (table.LEXTABLE->table[i].lexema == LEX_INT && table.LEXTABLE->table[i + 1].lexema == LEX_ID) {
+		//				asmFile << " " << table.IDTABLE->table[table.LEXTABLE->table[i + 1].idxTI].id << ": DWORD";
+		//				if (table.LEXTABLE->table[i + 2].lexema == LEX_COMMA) asmFile << ",";
+		//			}
+		//			i++;
+		//		}
+		//	}*/
+		//}
 		asmFile << ASM_STACK_BLOCK;
 	}
 
@@ -46,45 +62,76 @@ namespace ASMGenerator {
 		string name;
 		
 		for (int i = 0; i < table.IDTABLE->size; i++) {
-			/*for (int j = 0; j < 4; j++) {
-				name = table.IDTABLE->table[i].view->id;
-			}*/
-			if (table.IDTABLE->table[i].littype == -1&& table.IDTABLE->table[i].idtype==1) {
-				for (int j = 0; j < 4; j++) {
-					name.push_back(table.IDTABLE->table[i].view->id[j]);
-					if (j == strlen((char*)table.IDTABLE->table[i].view->id)-1) break;
-				}
-				name += "_";
-				asmFile << "\t" <<setw(10)<< name+table.IDTABLE->table[i].id << " SDWORD " << table.IDTABLE->table[i].value.vstr->str << " 0" << endl;
-				name.clear();
-			}
-			if (table.IDTABLE->table[i].littype == -1 && table.IDTABLE->table[i].idtype == 2) {
-				for (int j = 0; j < 1; j++) {
-					name.push_back(table.IDTABLE->table[i].view->id[j]);	
-					if (j == strlen((char*)table.IDTABLE->table[i].view->id) - 1) break;
-				}
-				name += "_";
-				asmFile << "\t" << setw(10) << name+table.IDTABLE->table[i].id << " BYTE 255 DUP(0)" << endl;
-				name.clear();
+			if (table.IDTABLE->table[i].idtype != 2|| table.IDTABLE->table[i].idtype != 3) {
+				if (table.IDTABLE->table[i].littype == -1 && table.IDTABLE->table[i].idtype == 1) {
+					for (int j = 0; j < 4; j++) {
+						name.push_back(table.IDTABLE->table[i].view->id[j]);
+						if (j == strlen((char*)table.IDTABLE->table[i].view->id) - 1) break;
+					}
+					name += "_";
+					asmFile << "\t" << setw(10) << name + table.IDTABLE->table[i].id << " SDWORD " << table.IDTABLE->table[i].value.vstr->str << " 0" << endl;
+					name.clear();
+				}						
 			}
 		}
+
 	}
 
 	void AddCodeBlock() {
 		asmFile << "\n.code" << endl;
 	}
 
+
 	int equ = 0;
 	bool flag = false;
 	void AddMainProc(Tables table) {
 		string name;
+		string functionName;
+		bool isMain = false;
 		int finish=0;
+		int delta = 0;
 		for (int i = 0; i < table.LEXTABLE->size; i++) {
 			switch (table.LEXTABLE->table[i].lexema)
 			{
+			case LEX_DEF://ÍÀ×ÀÒÜ ÎÒÑÞÄÀ
+				if (table.LEXTABLE->table[i + 1].lexema == LEX_MAIN) break;
+				for (int j = 0; j < 4; j++) {
+					name.push_back(table.IDTABLE->table[table.LEXTABLE->table[i+2].idxTI].view->id[j]);
+					if (j == strlen((char*)table.IDTABLE->table[table.LEXTABLE->table[i+2].idxTI].view->id) - 1) break;
+				}
+				name += "_";
+				asmFile << name+table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].id << " PROC";
+				name.clear();
+				if (table.LEXTABLE->table[i+3].lexema == LEX_LEFTHESIS) {
+					while (table.LEXTABLE->table[i].lexema != LEX_LEFTBRACE) {
+						if (table.LEXTABLE->table[i].lexema == LEX_INT && table.LEXTABLE->table[i + 1].lexema == LEX_ID) {
+							for (int j = 0; j < 4; j++) {
+								name.push_back(table.IDTABLE->table[table.LEXTABLE->table[i + 1].idxTI].view->id[j]);
+								if (j == strlen((char*)table.IDTABLE->table[table.LEXTABLE->table[i + 1].idxTI].view->id) - 1) break;
+							}
+							functionName = name;
+							name += "_";							
+							if (table.IDTABLE->table[table.LEXTABLE->table[i+1].idxTI].idtype==3) {
+								asmFile << " " << name+table.IDTABLE->table[table.LEXTABLE->table[i + 1].idxTI].id << ": DWORD";
+							}
+							name.clear();
+							if (table.LEXTABLE->table[i + 2].lexema == LEX_COMMA) asmFile << ",";
+						}
+						delta++;
+						i++;
+					}
+					asmFile << endl;
+					
+				}
+				
+				name.clear();
+				break;
+
 			case LEX_MAIN:
 				asmFile << "\nmain PROC" << endl;
+				isMain = true;
 				break;
+
 			case LEX_OUT:
 				if (table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].littype == 1) {
 					for (int j = 0; j < 4; j++) {
@@ -96,6 +143,12 @@ namespace ASMGenerator {
 					asmFile << "\n\tcall outint\n";
 					name.clear();
 				}
+				break;
+			case LEX_RETURN:
+				asmFile << "\tpop eax" << endl;
+				asmFile << "\tret" << endl;
+				if(!isMain) asmFile << "glob_" << functionName << " ENDP" << endl;
+	
 				break;
 			case LEX_EQUAL:
 				equ = i;				
@@ -110,6 +163,27 @@ namespace ASMGenerator {
 						asmFile << "\tpush " << name + table.IDTABLE->table[table.LEXTABLE->table[i].idxTI].id<<endl;
 						name.clear();
 					}
+
+					if (table.LEXTABLE->table[i].lexema == LEX_ID&&table.LEXTABLE->table[i + 1].lexema == LEX_LEFTHESIS) {
+						string funcName= table.IDTABLE->table[table.LEXTABLE->table[i].idxTI].id;
+						
+						while (table.LEXTABLE->table[i + 1].lexema != LEX_RIGHTHESIS)
+						{
+							if (table.LEXTABLE->table[i + 1].lexema == LEX_ID) {
+								for (int j = 0; j < 4; j++) {
+									name.push_back(table.IDTABLE->table[table.LEXTABLE->table[i + 1].idxTI].view->id[j]);
+									if (j == strlen((char*)table.IDTABLE->table[table.LEXTABLE->table[i + 1].idxTI].view->id) - 1) break;
+								}
+								name += "_";
+								asmFile << "\tpush " << name + table.IDTABLE->table[table.LEXTABLE->table[i + 1].idxTI].id << endl;
+								name.clear();
+							}
+							i++;
+						}
+						
+						asmFile << "\tcall glob_" <<funcName << endl;
+					}
+
 						if (table.LEXTABLE->table[i -1].lexema == LEX_ID && table.LEXTABLE->table[i + 1].lexema == LEX_LITERAL && table.LEXTABLE->table[i + 2].lexema == LEX_SEMICOLON) {
 							for (int j = 0; j < 4; j++) {
 								name.push_back(table.IDTABLE->table[table.LEXTABLE->table[i-1].idxTI].view->id[j]);
