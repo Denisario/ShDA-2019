@@ -26,22 +26,12 @@ namespace ASMGenerator {
 	void AddFuncInfo(Tables table) {
 		asmFile << "\n\nExitProcess PROTO : DWORD\n";
 		asmFile << "outint PROTO : DWORD\n";
+		asmFile << "outstr PROTO : DWORD\n";
+		asmFile << "outintn PROTO : DWORD\n";
+		asmFile << "outstrn PROTO : DWORD\n";
+		asmFile << "catlines	PROTO: DWORD, : DWORD, :DWORD";
 
-		//for (int i = 0; i < table.LEXTABLE->size; i++) {
-		//	if (table.LEXTABLE->table[i].lexema == LEX_DEF && table.LEXTABLE->table[i + 1].lexema == LEX_INT) {
-		//		asmFile << table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].id<<':';
-		//		
-		//	}
-		//	/*if (table.LEXTABLE->table[i].lexema == LEX_LEFTHESIS) {
-		//		while (table.LEXTABLE->table[i].lexema != LEX_RIGHTHESIS) {
-		//			if (table.LEXTABLE->table[i].lexema == LEX_INT && table.LEXTABLE->table[i + 1].lexema == LEX_ID) {
-		//				asmFile << " " << table.IDTABLE->table[table.LEXTABLE->table[i + 1].idxTI].id << ": DWORD";
-		//				if (table.LEXTABLE->table[i + 2].lexema == LEX_COMMA) asmFile << ",";
-		//			}
-		//			i++;
-		//		}
-		//	}*/
-		//}
+
 		asmFile << ASM_STACK_BLOCK;
 	}
 
@@ -82,14 +72,20 @@ namespace ASMGenerator {
 	}
 
 
+
 	int equ = 0;
 	bool flag = false;
+	bool isIf = false;
+	bool isElse = false;
+	bool isPol = false;
 	void AddMainProc(Tables table) {
 		string name;
 		string functionName;
+		string nameOfEqu;
+		string name1;
 		bool isMain = false;
 		int finish = 0;
-		int delta = 0;
+		int  deltaIf= 0;
 		int position = 0;
 		for (int i = 0; i < table.LEXTABLE->size; i++) {
 			switch (table.LEXTABLE->table[i].lexema)
@@ -119,7 +115,7 @@ namespace ASMGenerator {
 							name.clear();
 							if (table.LEXTABLE->table[i + 2].lexema == LEX_COMMA) asmFile << ",";
 						}
-						delta++;
+					
 						i++;
 					}
 					asmFile << endl;
@@ -143,8 +139,36 @@ namespace ASMGenerator {
 						if (j == strlen((char*)table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].view->id) - 1) break;
 					}
 					name += "_";
-					asmFile << "\n\tpush eax";
+					asmFile << "\tpush " << name << table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].id;
 					asmFile << "\n\tcall outint\n";
+					asmFile << "\n\tpop " << name << table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].id<<endl;
+					name.clear();
+				}
+				if (table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].littype == 2) {
+					asmFile << "\tpush offset " << table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI-1].id;
+					asmFile << "\n\tcall outstr\n";
+					name.clear();
+				}
+				break;
+			case LEX_OUTN:
+				if (table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].littype == 1) {
+					for (int j = 0; j < 4; j++) {
+						name.push_back(table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].view->id[j]);
+						if (j == strlen((char*)table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].view->id) - 1) break;
+					}
+					name += "_";
+					asmFile << "\tpush"<<name<< table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].id;
+					asmFile << "\n\tcall outintn\n";
+					name.clear();
+				}
+				if (table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].littype == 2) {
+					for (int j = 0; j < 4; j++) {
+						name.push_back(table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].view->id[j]);
+						if (j == strlen((char*)table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].view->id) - 1) break;
+					}
+					name += "_";
+					asmFile << "\tpush offset " <<table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI - 1].id;
+					asmFile << "\n\tcall outstrn\n";
 					name.clear();
 				}
 				break;
@@ -157,11 +181,19 @@ namespace ASMGenerator {
 			case LEX_EQUAL:
 				if (table.LEXTABLE->table[i + 1].lexema == LEX_ID && table.IDTABLE->table[table.LEXTABLE->table[i + 1].idxTI].littype == -1){
 					functionName = table.IDTABLE->table[table.LEXTABLE->table[i + 1].idxTI].id;
-				}
+				}				
+			
 
 				equ = i;
+				for (int j = 0; j < 4; j++) {
+					nameOfEqu.push_back(table.IDTABLE->table[table.LEXTABLE->table[ equ-1 ].idxTI].view->id[j]);
+					if (j == strlen((char*)table.IDTABLE->table[table.LEXTABLE->table[equ - 1].idxTI].view->id) - 1) break;
+				}
+				nameOfEqu += "_";
+				name1 = table.IDTABLE->table[table.LEXTABLE->table[equ - 1].idxTI].id;
 				while (table.LEXTABLE->table[i].lexema != LEX_SEMICOLON) {
 					if (table.LEXTABLE->table[i].lexema == LEX_ID&& table.LEXTABLE->table[i+1].lexema!=LEX_COMMA && table.LEXTABLE->table[i - 1].lexema != LEX_COMMA) {
+						isPol = false;
 						for (int j = 0; j < 4; j++) {
 							name.push_back(table.IDTABLE->table[table.LEXTABLE->table[i].idxTI].view->id[j]);
 							if (j == strlen((char*)table.IDTABLE->table[table.LEXTABLE->table[i].idxTI].view->id) - 1) break;
@@ -188,37 +220,52 @@ namespace ASMGenerator {
 							i--;
 						}
 						i = position;
-			/*			string funcName = table.IDTABLE->table[table.LEXTABLE->table[i].idxTI].id;*/
+			
 						asmFile << "\tcall glob_" <<functionName << endl;
 					}
 
 					if (table.LEXTABLE->table[i - 1].lexema == LEX_ID && table.LEXTABLE->table[i + 1].lexema == LEX_LITERAL && table.LEXTABLE->table[i + 2].lexema == LEX_SEMICOLON) {
-						for (int j = 0; j < 4; j++) {
-							name.push_back(table.IDTABLE->table[table.LEXTABLE->table[i - 1].idxTI].view->id[j]);
-							if (j == strlen((char*)table.IDTABLE->table[table.LEXTABLE->table[i - 1].idxTI].view->id) - 1) break;
+						isPol = false;
+						if (table.IDTABLE->table[table.LEXTABLE->table[i - 1].idxTI].iddatatype == 1){
+							for (int j = 0; j < 4; j++) {
+								name.push_back(table.IDTABLE->table[table.LEXTABLE->table[i - 1].idxTI].view->id[j]);
+								if (j == strlen((char*)table.IDTABLE->table[table.LEXTABLE->table[i - 1].idxTI].view->id) - 1) break;
+							}
+							name += "_";
+							asmFile << "\tmov " << name + table.IDTABLE->table[table.LEXTABLE->table[i - 1].idxTI].id << ", " << table.IDTABLE->table[table.LEXTABLE->table[i + 1].idxTI].value.vint << endl;
+							name.clear();
 						}
-						name += "_";
-						asmFile << "\tmov " << name + table.IDTABLE->table[table.LEXTABLE->table[i - 1].idxTI].id << ", " << table.IDTABLE->table[table.LEXTABLE->table[i + 1].idxTI].value.vint << endl;
-						name.clear();
+						
+						
 					}
 
-					if (table.LEXTABLE->table[i].lexema == LEX_PLUS) {
+					if (table.LEXTABLE->table[i].lexema == LEX_PLUS&&table.IDTABLE->table[table.LEXTABLE->table[i-2].idxTI].iddatatype!=2) {
+						isPol = true;
 						asmFile << "\tpop ebx\n\tpop eax" << endl;
 						asmFile << "\tadd eax, ebx" << endl;
 						asmFile << "\tpush eax" << endl;
 						name.clear();
+					}else if(table.LEXTABLE->table[i].lexema == LEX_PLUS && table.IDTABLE->table[table.LEXTABLE->table[i - 2].idxTI].iddatatype == 2){
+						isPol = true;
+						asmFile << "pop eax " <<endl;
+						asmFile << "pop ebx " <<endl;
+						asmFile << "call catlines " <<endl;
+						
 					}
 					if (table.LEXTABLE->table[i].lexema == LEX_MINUS) {
+						isPol = true;
 						asmFile << "\tpop ebx\n\tpop eax" << endl;
 						asmFile << "\tsub eax, ebx" << endl;
 						asmFile << "\tpush eax" << endl;
 					}
 					if (table.LEXTABLE->table[i].lexema == LEX_STAR) {
+						isPol = true;
 						asmFile << "\tpop ebx\n\tpop eax" << endl;
 						asmFile << "\timul ebx" << endl;
 						asmFile << "\tpush eax" << endl;
 					}
 					if (table.LEXTABLE->table[i].lexema == LEX_DIRSLASH) {
+						isPol = true;
 						asmFile << "\tpop ebx" << endl;
 						asmFile << "\tmov edx, 0 " << endl;
 						asmFile << "\tpop eax" << endl;
@@ -226,6 +273,7 @@ namespace ASMGenerator {
 						asmFile << "\tpush eax" << endl;
 					}
 					if (table.LEXTABLE->table[i].lexema == LEX_REM) {
+						isPol = true;
 						asmFile << "\tpop ebx" << endl;
 						asmFile << "\tmov edx, 0 " << endl;
 						asmFile << "\tpop eax" << endl;
@@ -236,8 +284,38 @@ namespace ASMGenerator {
 
 					i++;
 				}
+				if (isPol) asmFile << "\tmov "<<nameOfEqu+name1<< ", eax"<<endl;
+				nameOfEqu.clear();
 				break;
 			case LEX_IF:
+				isIf = true;
+				for (int j = 0; j < 4; j++) {
+					name.push_back(table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].view->id[j]);
+					if (j == strlen((char*)table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].view->id) - 1) break;
+				}
+				name += "_";
+				asmFile << "\tcmp " << name+table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].id << ", 5" << endl;
+				asmFile << "\tjg TrueResult" << endl;
+				asmFile << "\tjge FalseResult" << endl;
+				name.clear();
+				for (int j = i; j < i + 30; j++) {
+					if (table.LEXTABLE->table[j].lexema == LEX_STARTBLOCK) asmFile << "\tTrueResult:" << endl;
+					
+					break;
+				}				
+				asmFile << "\ttrueResult:" << endl;
+				break;
+				i = deltaIf;
+			
+			case LEX_ELSE:
+				isIf = false;
+				isElse = true;
+				asmFile << "\tfalseResult:" << endl;
+				break;
+			case LEX_ENDBLOCK:
+				if(isIf) asmFile << "\tjmp code" << endl;
+				asmFile << "\tleave"<<endl;
+				if (isElse) asmFile << "\tcode:" << endl;
 				break;
 			default:
 				/*throw ERROR_THROW(700);*/

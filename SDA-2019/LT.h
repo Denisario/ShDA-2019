@@ -11,6 +11,7 @@
 #define LEX_DEF 'd'
 #define LEX_RETURN 'r'
 #define LEX_OUT 'o'
+#define LEX_OUTN 'n'
 #define LEX_VAR 'a'
 #define LEX_SEMICOLON ';'
 #define LEX_COMMA ','

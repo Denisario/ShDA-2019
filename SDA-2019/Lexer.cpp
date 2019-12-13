@@ -115,6 +115,13 @@ namespace  Lexer {
 			NODE(1, RELATION('t', 3)),
 			NODE()
 		);
+		FST fstOutn(text, 5,
+			NODE(1, RELATION('o', 1)),
+			NODE(1, RELATION('u', 2)),
+			NODE(1, RELATION('t', 3)),
+			NODE(1, RELATION('n', 4)),
+			NODE()
+		);
 		FST fstMain(text, 5,
 			NODE(1, RELATION('M', 1)),
 			NODE(1, RELATION('a', 2)),
@@ -291,7 +298,7 @@ namespace  Lexer {
 
 		FST fstLiteralOfString(text, 3,
 			NODE(1, RELATION('\"', 1)),
-			NODE(71,
+			NODE(72,
 				RELATION('\"', 2), RELATION('a', 1), RELATION('b', 1), RELATION('c', 1), RELATION('d', 1),
 				RELATION('e', 1), RELATION('f', 1), RELATION('g', 1), RELATION('h', 1), RELATION('i', 1), RELATION('j', 1),
 				RELATION('k', 1), RELATION('l', 1), RELATION('m', 1), RELATION('n', 1), RELATION('o', 1), RELATION('p', 1),
@@ -303,7 +310,8 @@ namespace  Lexer {
 				RELATION('é', 1), RELATION('ê', 1), RELATION('ë', 1), RELATION('ì', 1), RELATION('í', 1), RELATION('î', 1),
 				RELATION('ï', 1), RELATION('ð', 1), RELATION('ñ', 1), RELATION('ò', 1), RELATION('ó', 1), RELATION('ô', 1),
 				RELATION('õ', 1), RELATION('ö', 1), RELATION('÷', 1), RELATION('ø', 1), RELATION('ù', 1), RELATION('ú', 1),
-				RELATION('û', 1), RELATION('ü', 1), RELATION('ý', 1), RELATION('þ', 1), RELATION('ÿ', 1), RELATION(' ', 1)
+				RELATION('û', 1), RELATION('ü', 1), RELATION('ý', 1), RELATION('þ', 1), RELATION('ÿ', 1), RELATION('\ ', 1),
+				RELATION('_', 1)
 			),
 			NODE()
 		);
@@ -334,6 +342,10 @@ namespace  Lexer {
 		}
 		if (execute(fstOut)) {
 			Add(tableOfLexem, createStructLexem(LEX_OUT, numberOfstring, LT_TI_NULLIDX));
+			return;
+		}
+		if (execute(fstOutn)) {
+			Add(tableOfLexem, createStructLexem(LEX_OUTN, numberOfstring, LT_TI_NULLIDX));
 			return;
 		}
 		if (execute(fstMain)) {
@@ -722,6 +734,10 @@ namespace  Lexer {
 	}
 
 	void CheckLTIT(Tables table) {
+
+
+
+
 		int id = 0;
 		int tmp;
 		for (int i = 0; i < table.LEXTABLE->size; i++) {

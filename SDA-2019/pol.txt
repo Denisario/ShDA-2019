@@ -1,7 +1,7 @@
 dti(ti,ti,ti){
 ati;
-i=ii+i-;
-ri;
+i=iii+*ii/+;/i);
+ir;
 }
 dm
 {
@@ -10,9 +10,7 @@ i=l;
 ati;
 i=l;
 ati;
-i=l;
-ati;
-i=i(i,i,i);
+i=ii+;
 o(i);
-rl;
+lr;
 }

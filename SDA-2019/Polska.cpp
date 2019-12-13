@@ -12,6 +12,8 @@ bool PN::searchExpression(Tables Tables) {
 	for (int i = 0; i < Tables.LEXTABLE->size; i++) {
 		if (Tables.LEXTABLE->table[i].lexema == LEX_EQUAL) {
 			fl = PolishNotation(++i, Tables);
+		}if (Tables.LEXTABLE->table[i].lexema == LEX_RETURN) {
+			fl = PolishNotation(i, Tables);
 		}
 	}
 	return fl;
@@ -80,6 +82,7 @@ bool PN::PolishNotation(int lextable_pos, Tables& tab) {
 		case LEX_STAR:
 		case LEX_DIRSLASH:
 		case LEX_REM:
+		case LEX_RETURN:
 		{
 			if (!st.size())					
 				st.push(tab.LEXTABLE->table[i]);	
@@ -127,6 +130,8 @@ int PN::prior(char l) {
 		return 3;
 	if (l == ':')
 		return 4;
+	if (l == 'r')
+		return 0;
 }
 
 void PN::Print(Tables tables)
