@@ -79,9 +79,9 @@ namespace Semantics {
 				}
 			}			
 			type = table.IDTABLE->table[LT::GetEntry(table.LEXTABLE, LTStartFunction + 2).idxTI].iddatatype;
-			functionType = table.IDTABLE->table[LT::GetEntry(table.LEXTABLE, LTFinishFunction-2).idxTI].littype;
+			functionType = table.IDTABLE->table[LT::GetEntry(table.LEXTABLE, LTFinishFunction-2).idxTI].idtype;
 			cout << LTStartFunction << " " << LTFinishFunction <<" "<<type<<" "<<functionType<< endl;
-			if (type != functionType) throw ERROR_THROW(304);
+			if (type != functionType&&functionType==1) throw ERROR_THROW(304);
 		}
 		//check return of main
 

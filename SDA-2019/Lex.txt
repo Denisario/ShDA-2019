@@ -1,6 +1,6 @@
 01 dti(ti,ti,ti){
 02 ati;
-03 i=i*(i+i)+(i/i);
+03 i=i*(i+i)+(i*i);
 04 ri;
 05 }
 07 dm
@@ -8,10 +8,11 @@
 09 ati;
 10 i=l;
 11 ati;
-12 i=l;
-13 ati;
-14 i=i+i;
-15 o(i);
-16 rl;
-17 }
+12 ati;
+13 i=l;
+14 i=i(l,l,l);
+15 i=l;
+16 o(i);
+17 rl;
+18 }
 
