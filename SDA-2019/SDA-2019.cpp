@@ -40,10 +40,10 @@ int _tmain(int argc, _TCHAR **argv)
 			std::cout << std::endl << "Польская запись не построена!" << std::endl;
 
 		}
-		polska.Print(tables);
 		
-		Lexer::CheckLTIT(tables);
+		Lexer::CheckLTIT(tables);		
 		Lexer::Print(tables);
+		polska.Print(tables);
 		ASMGenerator::Generate(tables);
 		system("start D:\\учёба\\3сем\\Курсач\\compile.bat");
 	}

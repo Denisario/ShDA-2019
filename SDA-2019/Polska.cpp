@@ -13,8 +13,8 @@ bool PN::searchExpression(Tables Tables) {
 		if (Tables.LEXTABLE->table[i].lexema == LEX_EQUAL) {
 			fl = PolishNotation(++i, Tables);
 		}if (Tables.LEXTABLE->table[i].lexema == LEX_RETURN) {
-			fl = PolishNotation(i, Tables);
-		}
+			fl = PolishNotation(++i, Tables);
+		}		
 	}
 	return fl;
 }
@@ -24,7 +24,8 @@ bool PN::PolishNotation(int lextable_pos, Tables& tab) {
 	int len = 0,									
 		lenout = 0,									
 		semicolonid;								
-	char skob = 0;									
+	char skob = 0;
+	int counterBracelet=0;
 	int indoffunk;									
 	for (int i = lextable_pos; tab.LEXTABLE->table[i].lexema != LEX_SEMICOLON; i++) {
 		len = i;									
@@ -39,7 +40,8 @@ bool PN::PolishNotation(int lextable_pos, Tables& tab) {
 			while (st.top().lexema != '(') {
 				outstr[lenout++] = st.top();		
 				skob++;
-				st.pop();						
+				st.pop();	
+				counterBracelet++;
 			}
 			st.pop();							
 			break;
@@ -74,6 +76,7 @@ bool PN::PolishNotation(int lextable_pos, Tables& tab) {
 			if (tab.LEXTABLE->table[i + 2].lexema == LEX_COMMA) return 1;
 			st.push(tab.LEXTABLE->table[i]);						
 			skob++;
+			counterBracelet++;
 			break;
 		}
 
@@ -111,11 +114,13 @@ bool PN::PolishNotation(int lextable_pos, Tables& tab) {
 		outstr[lenout++] = st.top();								
 		st.pop();
 	}
+	bool eol = false;
+	int pos=0;
 	for (int i = lextable_pos, k = 0; i < lextable_pos + lenout; i++) {
 		if ((tab.LEXTABLE->table[i].lexema == LEX_ID && tab.IDTABLE->table[tab.LEXTABLE->table[i].idxTI].idtype == 2) ) {}
-		else {
-			tab.LEXTABLE->table[i] = outstr[k];
-			k++;
+		else {			
+				tab.LEXTABLE->table[i] = outstr[k];
+				k++;			
 		}
 	}
 	tab.LEXTABLE->table[lextable_pos + lenout] = tab.LEXTABLE->table[semicolonid];
@@ -126,12 +131,10 @@ int PN::prior(char l) {
 		return 1;
 	if (l == '+' || l == '-')
 		return 2;
-	if (l == '*' || l == '/'|| l == ':')
+	if (l == '*' || l == '/')
 		return 3;
 	if (l == ':')
 		return 4;
-	if (l == 'r')
-		return 0;
 }
 
 void PN::Print(Tables tables)
@@ -142,3 +145,5 @@ void PN::Print(Tables tables)
 		if (tables.LEXTABLE->table[i].sn != tables.LEXTABLE->table[i + 1].sn) pol << endl;
 	}
 }
+
+

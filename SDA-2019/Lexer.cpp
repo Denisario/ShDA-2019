@@ -19,7 +19,8 @@ namespace  Lexer {
 	char* stringToChar(string str) {
 		char* massChar = new char[255];
 		for (int i = 0; i < str.length(); i++) {
-			massChar[i] = str[i];
+			if (str[i] == '\\'&&str[i+1]=='"') continue;
+			massChar[i] = str[i];			
 		}
 		massChar[str.length()] = '\0';
 		return massChar;
@@ -293,25 +294,32 @@ namespace  Lexer {
 			NODE()
 		);
 
-
-
-
 		FST fstLiteralOfString(text, 3,
 			NODE(1, RELATION('\"', 1)),
-			NODE(72,
-				RELATION('\"', 2), RELATION('a', 1), RELATION('b', 1), RELATION('c', 1), RELATION('d', 1),
-				RELATION('e', 1), RELATION('f', 1), RELATION('g', 1), RELATION('h', 1), RELATION('i', 1), RELATION('j', 1),
-				RELATION('k', 1), RELATION('l', 1), RELATION('m', 1), RELATION('n', 1), RELATION('o', 1), RELATION('p', 1),
-				RELATION('q', 1), RELATION('r', 1), RELATION('s', 1), RELATION('t', 1), RELATION('u', 1), RELATION('v', 1),
-				RELATION('w', 1), RELATION('x', 1), RELATION('y', 1), RELATION('z', 1), RELATION('0', 1), RELATION('1', 1),
-				RELATION('2', 1), RELATION('3', 1), RELATION('4', 1), RELATION('5', 1), RELATION('6', 1), RELATION('7', 1),
-				RELATION('8', 1), RELATION('9', 1), RELATION('а', 1), RELATION('б', 1), RELATION('в', 1), RELATION('г', 1),
-				RELATION('д', 1), RELATION('е', 1), RELATION('ё', 1), RELATION('ж', 1), RELATION('з', 1), RELATION('и', 1),
-				RELATION('й', 1), RELATION('к', 1), RELATION('л', 1), RELATION('м', 1), RELATION('н', 1), RELATION('о', 1),
-				RELATION('п', 1), RELATION('р', 1), RELATION('с', 1), RELATION('т', 1), RELATION('у', 1), RELATION('ф', 1),
-				RELATION('х', 1), RELATION('ц', 1), RELATION('ч', 1), RELATION('ш', 1), RELATION('щ', 1), RELATION('ъ', 1),
-				RELATION('ы', 1), RELATION('ь', 1), RELATION('э', 1), RELATION('ю', 1), RELATION('я', 1), RELATION('\ ', 1),
-				RELATION('_', 1)
+			NODE(84,
+				RELATION('\"', 2),
+				RELATION('a', 1), RELATION('b', 1), RELATION('c', 1), RELATION('d', 1),
+				RELATION('e', 1), RELATION('f', 1), RELATION('g', 1), RELATION('h', 1),
+				RELATION('i', 1), RELATION('j', 1),	RELATION('k', 1), RELATION('l', 1),
+				RELATION('m', 1), RELATION('n', 1), RELATION('o', 1), RELATION('p', 1),
+				RELATION('q', 1), RELATION('r', 1), RELATION('s', 1), RELATION('t', 1),
+				RELATION('u', 1), RELATION('v', 1), RELATION('w', 1), RELATION('x', 1),
+				RELATION('y', 1), RELATION('z', 1),
+				RELATION('0', 1), RELATION('1', 1),
+				RELATION('2', 1), RELATION('3', 1), RELATION('4', 1), RELATION('5', 1),
+				RELATION('6', 1), RELATION('7', 1), RELATION('8', 1), RELATION('9', 1),
+				RELATION('A', 1), RELATION('B', 1), RELATION('C', 1), RELATION('D', 1),
+				RELATION('E', 1), RELATION('F', 1), RELATION('G', 1), RELATION('H', 1),
+				RELATION('I', 1), RELATION('J', 1),	RELATION('K', 1), RELATION('L', 1),
+				RELATION('M', 1), RELATION('N', 1), RELATION('O', 1), RELATION('P', 1),
+				RELATION('R', 1), RELATION('S', 1), RELATION('T', 1), RELATION('U', 1),
+				RELATION('V', 1), RELATION('W', 1), RELATION('X', 1), RELATION('Y', 1),
+				RELATION('Z', 1), RELATION(' ', 1),	RELATION('_', 1), RELATION('.', 1),
+				RELATION(':', 1), RELATION(';', 1),	RELATION('!', 1), RELATION('?', 1),
+				RELATION('+', 1), RELATION('-', 1),	RELATION('*', 1), RELATION('/', 1),
+				RELATION('=', 1), RELATION('>', 1),	RELATION('<', 1), RELATION('@', 1),
+				RELATION('(', 1), RELATION(')', 1),	RELATION('[', 1), RELATION(']', 1),
+				RELATION('|', 1), RELATION('=', 1), RELATION(',', 1)
 			),
 			NODE()
 		);
@@ -578,7 +586,7 @@ namespace  Lexer {
 	{
 		char global[6] = "globa";
 		stackCall.push(createStructId(global, -1, NULL, NULL, NULL, NULL));
-		//cout << newIN.ucTextFormated;//удалить
+		cout << newIN.ucTextFormated;
 
 		int* typeData = new int;
 		int* typeID = new int;
@@ -615,7 +623,7 @@ namespace  Lexer {
 				string currentLexem;
 				for (int j = indOfFirstSpace + 1; j < currentString.length(); j++)
 				{
-					if (currentString[j] == '\'') {
+					if (currentString[j] == '\"') {
 						if (!scope)	scope = true;
 						else scope = false;
 					}
@@ -734,8 +742,10 @@ namespace  Lexer {
 	}
 
 	void CheckLTIT(Tables table) {
-
-
+		int equals = 0;
+		for (int i = 0; i < table.LEXTABLE->size; i++) {
+			if (table.LEXTABLE->table[i].lexema == LEX_EQUAL) equals++;
+		}
 
 
 		int id = 0;
@@ -745,7 +755,6 @@ namespace  Lexer {
 				table.IDTABLE->table[id++].idxfirstLE = i;
 			}
 		}
-
 		int startPos = 0, finishPos = 0, counterFunc = 0, startParam=0, finish=0;
 		string name;
 		int posInLT = 0;
@@ -753,32 +762,13 @@ namespace  Lexer {
 			if (table.LEXTABLE->table[i].lexema == 'd') counterFunc++;
 
 		}
-
 		for (int k = 0; k < counterFunc; k++) {
 			for (int i = finishPos; i < table.LEXTABLE->size; i++) {
 				if (LT::GetEntry(table.LEXTABLE, i).lexema == '{') {
 					startPos = i;
 					break;
-
 				}
-
-			}
-
-			/*or (int i = finish; i < table.LEXTABLE->size; i++) {
-				if (LT::GetEntry(table.LEXTABLE, i).lexema == '('&&LT::GetEntry(table.LEXTABLE, i-1).lexema == 'i'&&LT::GetEntry(table.LEXTABLE, i-2).lexema == 't') {
-					startParam = i;
-					break;
-				}
-
-			}*/
-			/*for (int i = f+1; i < table.LEXTABLE->size; i++) {
-				if (LT::GetEntry(table.LEXTABLE, i).lexema == '}'&&LT::GetEntry(table.LEXTABLE, i - 2).lexema == 'i') {
-					finish = i;
-					break;
-				}
-
-			}*/
-
+			}			
 
 			for (int i = finishPos + 1; i < table.LEXTABLE->size; i++) {
 				if (LT::GetEntry(table.LEXTABLE, i).lexema == '}') {
@@ -788,6 +778,46 @@ namespace  Lexer {
 			}
 			int type = 0;
 			string paramName;
+			int smPos = 0;
+
+			for (int q = 0; q < equals; q++) {
+
+				int d = 0;
+
+				for (int i = smPos; i < table.LEXTABLE->size; i++) {
+					if (table.LEXTABLE->table[i].lexema == LEX_SEMICOLON) {
+						if (table.LEXTABLE->table[i].sn - table.LEXTABLE->table[i + 1].sn == 0) {
+							smPos = i;
+							while (table.LEXTABLE->table[i + 1].sn == table.LEXTABLE->table[i].sn) {
+								d++;
+								i++;
+							}
+							break;
+						}
+					}
+				}
+
+				for (int i = 0; i < table.LEXTABLE->size; i++) {
+					if (table.LEXTABLE->table[i].lexema == LEX_SEMICOLON) {
+						if (table.LEXTABLE->table[i].sn - table.LEXTABLE->table[i + 1].sn == 0) {
+
+							while (table.LEXTABLE->table[i + 1].sn == table.LEXTABLE->table[i].sn) {
+								table.LEXTABLE->table[i] = table.LEXTABLE->table[i + d];
+								i++;
+
+							}
+							cout << i << endl;
+							cout << d << endl;
+							for (int j = i; j < table.LEXTABLE->size; j++) {
+								table.LEXTABLE->table[j] = table.LEXTABLE->table[j + d];
+
+							}
+						}
+					}
+				}
+				table.LEXTABLE->size -= d;
+				d = 0;
+			}
 			
 			for (int i = startPos; i < finishPos; i++) {
 				for (int j = 0; j < startPos; j++) {
@@ -796,14 +826,12 @@ namespace  Lexer {
 							if (table.LEXTABLE->table[k].lexema == LEX_ID) {
 								if (!strcmp(table.IDTABLE->table[table.LEXTABLE->table[j].idxTI].id , table.IDTABLE->table[table.LEXTABLE->table[k].idxTI].id)) {
 									table.IDTABLE->table[table.LEXTABLE->table[k].idxTI].littype = (IT::LITERALTYPE)1;
-								}
-								
+								}								
 							}
 							if (table.LEXTABLE->table[k].lexema == LEX_BRACELET) break;
 						}
 					}
 				}
-
 
 				if (table.LEXTABLE->table[i - 1].lexema == 't'&&table.LEXTABLE->table[i].lexema == 'i') {
 					name = table.IDTABLE->table[table.LEXTABLE->table[i].idxTI].id;

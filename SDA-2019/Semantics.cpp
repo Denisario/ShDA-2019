@@ -29,34 +29,17 @@ namespace Semantics {
 		}
 		else if (usMain > 1) throw ERROR_THROW_IN(301, line, NULL);
 
-		//check names in ID
+		//if..else
 
 		for (int i = 0; i < table.LEXTABLE->size; i++) {
-			if ((LT::GetEntry(table.LEXTABLE, i).lexema == 't') && !(LT::GetEntry(table.LEXTABLE, i + 1).lexema == 'i')) {
-				line = LT::GetEntry(table.LEXTABLE, i + 1).sn-1;
-				throw ERROR_THROW_IN(302,line, NULL);
-			}			
-		}
-		line = 0;
-		//check unique of identifiers
-		string semicolon=";", lexem, lexem2;
-		for (int i = 0; i < table.IDTABLE->size; i++) {
-			if (table.IDTABLE->table[i].littype == -1) {
-				for (int j = i+1; j < table.IDTABLE->size; j++) {
-					
-					if ((!strcmp(table.IDTABLE->table[i].id, table.IDTABLE->table[j].id))&&(!strcmp(table.IDTABLE->table[i].view->id, table.IDTABLE->table[j].view->id))) {
-						lexem = table.LEXTABLE->table[table.IDTABLE->table[i].idxfirstLE+1].lexema;
-						lexem2 = table.LEXTABLE->table[table.IDTABLE->table[j].idxfirstLE+1].lexema;
-						/*if (lexem==semicolon&&lexem2==semicolon) {
-							throw ERROR_THROW(303);
-						}*/
-					}
+			if (table.LEXTABLE->table[i].lexema == LEX_IF || table.LEXTABLE->table[i].lexema == LEX_ELSE) {
+				while (table.LEXTABLE->table[i].lexema != LEX_ENDBLOCK) {
+					if (table.LEXTABLE->table[i].lexema == LEX_VAR) throw ERROR_THROW(310);
+					i++;
 				}
 			}
-			else {
-				continue;
-			}		
-		}//rework
+		}
+
 		//check type of returned literal and return
 
 		int LTStartFunction = 0, LTFinishFunction = 0, type = 0, functionType = 0;
@@ -95,6 +78,32 @@ namespace Semantics {
 					}
 				}
 			}			
+		}	
+		
+		int counterOfParams = 0;
+		int callParams = 0;
+		int callFunctions = 0;
+		string name;
+		for (int i = 0; i < table.LEXTABLE->size; i++) {
+				if (table.LEXTABLE->table[i].lexema == LEX_DEF && table.LEXTABLE->table[i + 3].lexema == LEX_LEFTHESIS) {
+					
+					name = table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].id;
+					while (table.LEXTABLE->table[i+3].lexema != LEX_RIGHTHESIS) {
+						if (table.LEXTABLE->table[i+3].lexema == LEX_ID) counterOfParams++;
+						i++;
+					}
+				}
+
+				if ((table.LEXTABLE->table[i].lexema == LEX_ID || table.LEXTABLE->table[i].lexema == LEX_LITERAL) && table.LEXTABLE->table[i - 1].lexema == LEX_EQUAL && table.LEXTABLE->table[i + 1].lexema == LEX_LEFTHESIS) {
+					callFunctions++;
+					while (table.LEXTABLE->table[i+1].lexema != LEX_RIGHTHESIS) {
+						if (table.LEXTABLE->table[i+1].lexema == LEX_ID|| table.LEXTABLE->table[i + 1].lexema == LEX_LITERAL) callParams++;
+						i++;
+					}
+				}
+		}
+		if (counterOfParams * callFunctions != callParams) {
+			throw ERROR_THROW(307);
 		}
 	}
 }

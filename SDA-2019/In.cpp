@@ -89,7 +89,7 @@ namespace In
 		{
 			if (*(newIn.text + i) != ' ')
 			{
-				if (*(newIn.text + i) == '\'')
+				if (*(newIn.text + i) == '\"')
 				{
 					if (!bScope) bScope = true;
 					else bScope = false;
@@ -101,7 +101,7 @@ namespace In
 					(*(newIn.text + i) == '(') || (*(newIn.text + i) == ')') || (*(newIn.text + i) == '{') ||
 					(*(newIn.text + i) == '}') || (*(newIn.text + i) == '\n') || (*(newIn.text + i) == '/')||
 					(*(newIn.text + i) == ':')|| (*(newIn.text + i) == '[')|| (*(newIn.text + i) == ']') || (*(newIn.text + i) == '>')
-					|| (*(newIn.text + i) == '<') || (*(newIn.text + i) == '&') || (*(newIn.text + i) == '|') || (*(newIn.text + i) == '!')) && (!bScope))
+					|| (*(newIn.text + i) == '<')) && (!bScope))
 				{
 					if ((*(newIn.text + i) == '/') && (*(newIn.text + i + 1) == '/')) {
 						while (*(newIn.text + i) != '\n') {
@@ -174,15 +174,15 @@ namespace In
 		long long int iCounterLexem = 0;
 		unsigned char *finishInput = newIn.ucTextFormated;
 
-		for (int i = 0; i < strlen((char*)finishInput); i++) {
-			if ((((finishInput[i] == '=')|| finishInput[i] == '<'||finishInput[i] == '>'|| finishInput[i] == '!')&&(finishInput[i + 2] == '='))||(((finishInput[i] == '&'))&&(finishInput[i+2]=='&'))
-				|| (((finishInput[i] == '|')) && (finishInput[i + 2] == '|'))) {
-				for (int j = i + 1; j < strlen((char*)finishInput); j++) {
-					finishInput[j] = finishInput[j + 1];
-				}
+		//for (int i = 0; i < strlen((char*)finishInput); i++) {
+		//	if ((((finishInput[i] == '=')|| finishInput[i] == '<'||finishInput[i] == '>'|| finishInput[i] == '!')&&(finishInput[i + 2] == '='))||(((finishInput[i] == '&'))&&(finishInput[i+2]=='&'))
+		//		|| (((finishInput[i] == '|')) && (finishInput[i + 2] == '|'))) {
+		//		for (int j = i + 1; j < strlen((char*)finishInput); j++) {
+		//			finishInput[j] = finishInput[j + 1];
+		//		}
 
-			}
-		}//доп. проверка для составных условных операторов
+		//	}
+		//}//доп. проверка для составных условных операторов
 		for (int i = 0; i < strlen((char*)newIn.ucTextFormated); i++)
 		{
 			if (*pPtrText == ' ') iCounterLexem++;
