@@ -16,7 +16,7 @@ namespace LT {
 
 	void Add(LexTable* lextable, Entry entry)
 	{
-		if (lextable->size > lextable->maxsize) throw ERROR_THROW(199);
+		if (lextable->size > lextable->maxsize) throw ERROR_THROW(201);
 		lextable->table[lextable->size] = entry;
 		lextable->size++;
 	}

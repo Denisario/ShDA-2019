@@ -7,15 +7,6 @@ using namespace std;
 
 namespace ASMGenerator {
 	ofstream asmFile("../../Generator/asm.asm");
-	/*string setName(Tables table, int pos) {
-		string name;
-		for (int j = 0; j < 4; j++) {
-			name.push_back(table.IDTABLE->table[table.LEXTABLE->table[pos].idxTI].view->id[j]);
-			if (j == strlen((char*)table.IDTABLE->table[table.LEXTABLE->table[pos].idxTI].view->id) - 1) break;
-		}
-		name += "_";
-		return name;
-	}*/
 
 	void AddSystemInfo() {
 		asmFile << ASM_START_BLOCK;
@@ -29,7 +20,8 @@ namespace ASMGenerator {
 		asmFile << "outstr PROTO : DWORD\n";
 		asmFile << "outintn PROTO : DWORD\n";
 		asmFile << "outstrn PROTO : DWORD\n";
-		asmFile << "catlines	PROTO: DWORD, : DWORD, :DWORD";
+		asmFile << "isGreather	PROTO: DWORD, :DWORD"<<endl;
+		asmFile << "checkLines	PROTO: DWORD, :DWORD"<<endl;
 		asmFile << ASM_STACK_BLOCK;
 	}
 
@@ -126,6 +118,16 @@ namespace ASMGenerator {
 				asmFile << "\nmain PROC" << endl;
 				isMain = true;
 				break;
+			case LEX_GREATHER:
+				asmFile << "\tpush offset " <<  table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].id<<endl;
+				asmFile << "\tpush offset " << table.IDTABLE->table[table.LEXTABLE->table[i + 4].idxTI].id<<endl;
+				asmFile << "\n\tcall isGreather\n";
+				break;
+			case LEX_CHECK:
+				asmFile << "\tpush offset " << table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].id << endl;
+				asmFile << "\tpush offset " << table.IDTABLE->table[table.LEXTABLE->table[i + 4].idxTI].id << endl;
+				asmFile << "\n\tcall checkLines\n";
+				break;
 			case LEX_OUT:
 				if (table.IDTABLE->table[table.LEXTABLE->table[i + 2].idxTI].littype == 1) {
 					for (int j = 0; j < 4; j++) {
@@ -185,6 +187,7 @@ namespace ASMGenerator {
 				if (!isMain) asmFile << "glob_" << functionName << " ENDP" << endl;
 				break;
 			case LEX_EQUAL:
+				
 				if (table.LEXTABLE->table[i + 1].lexema == LEX_ID && table.IDTABLE->table[table.LEXTABLE->table[i + 1].idxTI].littype == -1){
 					functionName = table.IDTABLE->table[table.LEXTABLE->table[i + 1].idxTI].id;
 				}
@@ -206,12 +209,13 @@ namespace ASMGenerator {
 							asmFile << "\tpush " << name + table.IDTABLE->table[table.LEXTABLE->table[i].idxTI].id << endl;									
 						name.clear();
 					}
-
-					if (table.LEXTABLE->table[i-1].lexema != LEX_EQUAL&&table.LEXTABLE->table[i].lexema == LEX_LITERAL && table.LEXTABLE->table[i + 1].lexema != LEX_COMMA && table.LEXTABLE->table[i - 1].lexema != LEX_COMMA) {
-						isPol = false;						
-						asmFile << "\tpush " << table.IDTABLE->table[table.LEXTABLE->table[i].idxTI].id << endl;
+					if (table.LEXTABLE->table[i].lexema == LEX_LITERAL && table.LEXTABLE->table[i + 1].lexema != LEX_COMMA && table.LEXTABLE->table[i - 1].lexema != LEX_COMMA && table.LEXTABLE->table[i + 1].lexema != LEX_LEFTHESIS) {
+						isPol = false;
+						
+						asmFile << "\tpush " << name + table.IDTABLE->table[table.LEXTABLE->table[i].idxTI].id << endl;
 						name.clear();
 					}
+
 					if (table.LEXTABLE->table[i].lexema == LEX_ID && table.LEXTABLE->table[i + 1].lexema == LEX_LEFTHESIS) {
 						funcPos = i;
 						for (int j = 0; j < 4; j++) {
@@ -274,7 +278,6 @@ namespace ASMGenerator {
 						asmFile << "\tpop ebx\n\tpop eax" << endl;
 						asmFile << "\tadd eax, ebx" << endl;
 						asmFile << "\tpush eax" << endl;
-						name.clear();
 					}
 					if (table.LEXTABLE->table[i].lexema == LEX_MINUS) {
 						isPol = true;

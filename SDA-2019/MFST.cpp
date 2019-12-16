@@ -10,6 +10,7 @@ lbuf[1024];	// для ленты
 
 namespace MFST
 {
+	std::ofstream mfststream;
 	MfstState::MfstState()
 	{
 		lenta_position = 0;
@@ -154,6 +155,10 @@ namespace MFST
 
 	bool Mfst::start()
 	{
+		mfststream.open("MFST.txt", std::fstream::out);
+		if (mfststream.fail()) {
+			throw ERROR_THROW(6);
+		}
 		bool rc = false;
 		RC_STEP rc_step = SURPRISE;
 		char buf[MFST_DIAGN_MAXSIZE];
@@ -171,8 +176,6 @@ namespace MFST
 		case NS_NORULE:			MFST_TRACE4("------>NS_NURULE")
 			std::cout << "--------------------------------------------------------------------------" << std::endl;
 			std::cout << getDiagnosis(0, buf) << std::endl;
-			std::cout << getDiagnosis(1, buf) << std::endl;
-			std::cout << getDiagnosis(2, buf) << std::endl;
 			break;
 		case NS_NORULECHAIN:	MFST_TRACE4("------>NS_NURULENORULECHAIN") break;
 		case NS_ERROR:			MFST_TRACE4("------>NS_ERROR") break;
@@ -217,14 +220,17 @@ namespace MFST
 
 	void Mfst::printrules()
 	{
+		mfststream.open("MFST.txt", std::fstream::app);
 		MfstState state;
 		GRB::Rule rule;
+		mfststream << "------" << std::endl;
 		for (unsigned short k = 0; k < storestate.size(); k++)
 		{
 			state = storestate._Get_container()[k];
 			rule = grebach.getRule(state.nrule);
-			MFST_TRACE7
+			MFST_TRACE7;
 		};
+		mfststream.close();
 	};
 
 	bool Mfst::savededucation()

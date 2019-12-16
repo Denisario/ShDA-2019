@@ -26,11 +26,12 @@ int _tmain(int argc, _TCHAR **argv)
 		cout << in.ucTextFormated;
 		Tables tables = Lexer::createTables(in);
 		PN polska;
-		Semantics::startSem(tables);
+		Semantics::before(tables);
 		MFST_TRACE_START
 		Log::Close(log);
 		MFST::Mfst mfst(tables, GRB::getGreibach());
 		mfst.start();
+		mfst.printrules();
 		if (polska.searchExpression(tables))
 		{
 			std::cout << std::endl << "Польская запись построена!" << std::endl;
@@ -40,7 +41,7 @@ int _tmain(int argc, _TCHAR **argv)
 			std::cout << std::endl << "Польская запись не построена!" << std::endl;
 
 		}
-		
+		Semantics::startSem(tables);
 		Lexer::CheckLTIT(tables);		
 		Lexer::Print(tables);
 		polska.Print(tables);

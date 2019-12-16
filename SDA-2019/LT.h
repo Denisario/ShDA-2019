@@ -37,8 +37,8 @@
 #define LEX_AND '&'
 #define LEX_OR '|'
 #define LEX_NOT '!'
-#define LEX_DEFAULT_COMMERCIAL '@'
-
+#define LEX_CHECK 'y'
+#define LEX_GREATHER 'x'
 #pragma once
 namespace LT {
 	struct Entry {

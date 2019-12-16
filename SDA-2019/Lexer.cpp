@@ -130,6 +130,32 @@ namespace  Lexer {
 			NODE(1, RELATION('n', 4)),
 			NODE()
 		);
+		FST fstCheckLines(text, 11,
+			NODE(1, RELATION('c', 1)),
+			NODE(1, RELATION('h', 2)),
+			NODE(1, RELATION('e', 3)),
+			NODE(1, RELATION('c', 4)),
+			NODE(1, RELATION('k', 5)),
+			NODE(1, RELATION('L', 6)),
+			NODE(1, RELATION('i', 7)),
+			NODE(1, RELATION('n', 8)),
+			NODE(1, RELATION('e', 9)),
+			NODE(1, RELATION('s', 10)),
+			NODE()
+		);
+		FST fstIsGreather(text, 11,
+			NODE(1, RELATION('i', 1)),
+			NODE(1, RELATION('s', 2)),
+			NODE(1, RELATION('G', 3)),
+			NODE(1, RELATION('r', 4)),
+			NODE(1, RELATION('e', 5)),
+			NODE(1, RELATION('a', 6)),
+			NODE(1, RELATION('t', 7)),
+			NODE(1, RELATION('h', 8)),
+			NODE(1, RELATION('e', 9)),
+			NODE(1, RELATION('r', 10)),
+			NODE()
+		);
 		FST fstSemicolon(text, 2,
 			NODE(1, RELATION(';', 1)),
 			NODE()
@@ -230,7 +256,7 @@ namespace  Lexer {
 			NODE()
 		);
 		FST fstId(text, 2,
-			NODE(52, RELATION('a', 0), RELATION('b', 0), RELATION('c', 0), RELATION('d', 0), RELATION('e', 0),
+			NODE(62, RELATION('a', 0), RELATION('b', 0), RELATION('c', 0), RELATION('d', 0), RELATION('e', 0),
 				RELATION('f', 0), RELATION('g', 0), RELATION('h', 0), RELATION('i', 0), RELATION('j', 0), RELATION('k', 0),
 				RELATION('l', 0), RELATION('m', 0), RELATION('n', 0), RELATION('o', 0), RELATION('p', 0), RELATION('q', 0),
 				RELATION('r', 0), RELATION('s', 0), RELATION('t', 0), RELATION('u', 0), RELATION('v', 0), RELATION('w', 0),
@@ -239,19 +265,15 @@ namespace  Lexer {
 				RELATION('f', 1), RELATION('g', 1), RELATION('h', 1), RELATION('i', 1), RELATION('j', 1), RELATION('k', 1),
 				RELATION('l', 1), RELATION('m', 1), RELATION('n', 1), RELATION('o', 1), RELATION('p', 1), RELATION('q', 1),
 				RELATION('r', 1), RELATION('s', 1), RELATION('t', 1), RELATION('u', 1), RELATION('v', 1), RELATION('w', 1),
-				RELATION('x', 1), RELATION('y', 1), RELATION('z', 1)),
+				RELATION('x', 1), RELATION('y', 1), RELATION('z', 1), RELATION('0', 1), RELATION('1', 1), RELATION('2', 1),
+				RELATION('3', 1), RELATION('4', 1), RELATION('5', 1), RELATION('6', 1), RELATION('7', 1), RELATION('8', 1),
+				RELATION('9', 1)),
 			NODE()
 		);
 		FST fstEqual(text, 2,
 			NODE(1, RELATION('=', 1)),
 			NODE()
-		);
-
-		FST fstFullEqual(text, 3,
-			NODE(1, RELATION('=', 1)),
-			NODE(1, RELATION('=', 2)),
-			NODE()
-		);
+		);		
 
 		FST fstGreater(text, 2,
 			NODE(1, RELATION('>', 1)),
@@ -260,39 +282,7 @@ namespace  Lexer {
 		FST fstLesser(text, 2,
 			NODE(1, RELATION('<', 1)),
 			NODE()
-		);
-		FST fstGreaterOrEqual(text, 3,
-			NODE(1, RELATION('>', 1)),
-			NODE(1, RELATION('=', 2)),
-			NODE()
-		);
-		FST fstLesserOrEqual(text, 3,
-			NODE(1, RELATION('<', 1)),
-			NODE(1, RELATION('=', 2)),
-			NODE()
-		);
-
-		FST fstAnd(text, 3,
-			NODE(1, RELATION('&', 1)),
-			NODE(1, RELATION('&', 2)),
-			NODE()
-
-		);
-
-		FST fstOr(text, 3,
-			NODE(1, RELATION('|', 1)),
-			NODE(1, RELATION('|', 2)),
-			NODE()
-		);
-		FST fstNotEqual(text, 3,
-			NODE(1, RELATION('!', 1)),
-			NODE(1, RELATION('=', 2)),
-			NODE()
-		);
-		FST fstNot(text, 2,
-			NODE(1, RELATION('!', 1)),
-			NODE()
-		);
+		);		
 
 		FST fstLiteralOfString(text, 3,
 			NODE(1, RELATION('\"', 1)),
@@ -352,6 +342,14 @@ namespace  Lexer {
 			Add(tableOfLexem, createStructLexem(LEX_OUT, numberOfstring, LT_TI_NULLIDX));
 			return;
 		}
+		if (execute(fstCheckLines)) {
+			Add(tableOfLexem, createStructLexem(LEX_CHECK, numberOfstring, LT_TI_NULLIDX));
+			return;
+		}
+		if (execute(fstIsGreather)) {
+			Add(tableOfLexem, createStructLexem(LEX_GREATHER, numberOfstring, LT_TI_NULLIDX));
+			return;
+		}
 		if (execute(fstOutn)) {
 			Add(tableOfLexem, createStructLexem(LEX_OUTN, numberOfstring, LT_TI_NULLIDX));
 			return;
@@ -405,24 +403,12 @@ namespace  Lexer {
 		if (execute(fstEqual)) {
 			Add(tableOfLexem, createStructLexem(LEX_EQUAL, numberOfstring, LT_TI_NULLIDX, '='));
 			return;
-		}
-		if (execute(fstFullEqual)) {
-			Add(tableOfLexem, createStructLexem(LEX_FULLEQUAL, numberOfstring, LT_TI_NULLIDX, '='));
-			return;
-		}
+		}	
 		if (execute(fstGreater)) {
 			Add(tableOfLexem, createStructLexem(LEX_GREATER, numberOfstring, LT_TI_NULLIDX, '>', 2));
 			return;
 		}
 		if (execute(fstLesser)) {
-			Add(tableOfLexem, createStructLexem(LEX_LESS, numberOfstring, LT_TI_NULLIDX, '<', 2));
-			return;
-		}
-		if (execute(fstGreaterOrEqual)) {
-			Add(tableOfLexem, createStructLexem(LEX_GREATER, numberOfstring, LT_TI_NULLIDX, '>', 2));
-			return;
-		}
-		if (execute(fstLesserOrEqual)) {
 			Add(tableOfLexem, createStructLexem(LEX_LESS, numberOfstring, LT_TI_NULLIDX, '<', 2));
 			return;
 		}
@@ -456,33 +442,8 @@ namespace  Lexer {
 		if (execute(fstRem)) {
 			Add(tableOfLexem, createStructLexem(LEX_REM, numberOfstring, LT_TI_NULLIDX, ':', 3));
 			return;
-		}
-
-		if (execute(fstFullEqual)) {
-			Add(tableOfLexem, createStructLexem(LEX_FULLEQUAL, numberOfstring, LT_TI_NULLIDX, '==', -1));
-			return;
-		}
-
-		if (execute(fstFullEqual)) {
-			Add(tableOfLexem, createStructLexem(LEX_FULLEQUAL, numberOfstring, LT_TI_NULLIDX, '==', -1));
-			return;
-		}
-		if (execute(fstAnd)) {
-			Add(tableOfLexem, createStructLexem(LEX_AND, numberOfstring, LT_TI_NULLIDX, '&', 4));
-			return;
-		}
-		if (execute(fstOr)) {
-			Add(tableOfLexem, createStructLexem(LEX_OR, numberOfstring, LT_TI_NULLIDX, '|', 4));
-			return;
-		}
-		if (execute(fstNotEqual)) {
-			Add(tableOfLexem, createStructLexem(LEX_NOT, numberOfstring, LT_TI_NULLIDX, '!', 4));
-			return;
-		}
-		if (execute(fstNot)) {
-			Add(tableOfLexem, createStructLexem(LEX_NOT, numberOfstring, LT_TI_NULLIDX, '!', 4));
-			return;
-		}
+		}	
+		
 
 		if (execute(fstLiteralOfInteger)) {
 			int*t = new int;
@@ -532,8 +493,7 @@ namespace  Lexer {
 		}
 		if (execute(fstLiteralOfString)) {
 			int size = strlen(text);
-			if (size > 257) throw ERROR_THROW(200);
-			if (text[size - 1] != '\"') throw ERROR_THROW(201);
+			if (size > 257) throw ERROR_THROW(204);
 			int*t = new int;
 			int*t2 = new int;
 			int*t3 = new int;
@@ -558,10 +518,15 @@ namespace  Lexer {
 			return;
 		}
 		if (execute(fstId)) {
+			string name;
+			for (int j = 0; j < 5; j++) {
+				name.push_back(text[j]);
+				if (j == strlen(text - 1))break;
+			}
 			IT::Entry* view = new IT::Entry;
 			*view = stackCall.top();
 			int *type = new int;
-			IT::Entry newEntry = createStructId((char*)text, counterID++, typeData, typeID, littype, NULL, view);
+			IT::Entry newEntry = createStructId(stringToChar(name), counterID++, typeData, typeID, littype, NULL, view);
 			if ((*typeID == 2)) {
 				stackCall.push(newEntry);
 			}
@@ -578,7 +543,7 @@ namespace  Lexer {
 			return;
 		}
 		cout << text;
-		throw ERROR_THROW_IN(198, numberOfstring, poz);
+		throw ERROR_THROW_IN(200, numberOfstring, poz);
 
 	}
 
@@ -784,7 +749,7 @@ namespace  Lexer {
 
 				int d = 0;
 
-				for (int i = smPos; i < table.LEXTABLE->size; i++) {
+				for (int i = 0; i < table.LEXTABLE->size; i++) {
 					if (table.LEXTABLE->table[i].lexema == LEX_SEMICOLON) {
 						if (table.LEXTABLE->table[i].sn - table.LEXTABLE->table[i + 1].sn == 0) {
 							smPos = i;
